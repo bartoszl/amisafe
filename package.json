@@ -1,0 +1,25 @@
+{
+  "name": "amisafe",
+  "version": "1.0.0",
+  "description": "Glasgow University Hackathon SAS challange. Application warning people from entering dangerous locations in Chicago.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bartoszl/amisafe.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bartoszl/amisafe/issues"
+  },
+  "homepage": "https://github.com/bartoszl/amisafe#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "method-override": "^2.3.6"
+  }
+}
