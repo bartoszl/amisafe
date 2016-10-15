@@ -4,8 +4,8 @@ var moment = require('moment');
 //defining variable
 
 var timestampNow = moment().format();
-var timestampPrevious = moment().subtract(14, 'days').format();
-timestampNow =  moment().subtract(7, 'days').format();
+var timestampPrevious = moment().subtract(6, 'months').format();
+timestampNow =  moment().subtract(0, 'days').format();
 
 var isoNow = moment(timestampNow).format().split('+')[0];
 var isoPrevious = moment(timestampPrevious).format().split('+')[0];
