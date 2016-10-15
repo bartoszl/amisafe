@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
+import geoReducer from './geo_reducer';
 
 const indexReducer = combineReducers({
-  state: (emptyState = {}) => emptyState
+  coords: geoReducer
 });
 
 export default indexReducer;
