@@ -61,7 +61,7 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
         if(isNaN(avgCalc)) {
           // console.log("Area is not in range of any crimes.");
         } else {
-          console.log(lat + ",  " + long + "  :  " + avgCalc);
+          console.log("Lat: " + lat + ", Long: " + long + " | Crime Severity: " + avgCalc);
         }
         // console.log("Lat: " + lat + " | Long: " + long + " | Total Crimes: " + response.data.length + " | Total Crime Score: " + total + " | Area Average: " + avgCalc);
     }).catch(function (error) {

@@ -78,7 +78,7 @@ axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
       tot = tot + output[i];
     }
     var chicagoScore = tot/response.data.length;
-    console.log("Total Crime Score: " + tot + " | Chicago Avg.:" + chicagoScore);
+    console.log("Total Crime Score: " + tot + " | Chicago Crime Severity Avg.:" + chicagoScore);
     // console.log(output);
     // console.log("Community Area: " + response.data[0].community_area + " | Number of Crimes: " + response.data.length);
   })
