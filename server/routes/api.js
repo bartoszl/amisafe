@@ -19,7 +19,7 @@ Router.get('/points', function(req, res, next){
       }
     }).then(function(results){
       console.log(results);
-      res.send(result);
+      res.send(results);
     }).catch(function(err){
       res.send(err);
     });
