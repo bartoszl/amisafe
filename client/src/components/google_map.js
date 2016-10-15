@@ -11,8 +11,8 @@ class ClusterGoogleMap extends Component {
   componentDidMount() {
     let geopoints = this.props.fetchGeopoints();
 
-    /*
-    var heatMapData = [
+    
+    var heatMapData2 = [
       {location: new google.maps.LatLng(37.782, -122.447), weight: 0.5},
       new google.maps.LatLng(37.782, -122.445),
       {location: new google.maps.LatLng(37.782, -122.443), weight: 2},
@@ -28,17 +28,24 @@ class ClusterGoogleMap extends Component {
       new google.maps.LatLng(37.785, -122.439),
       {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
       {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
-    ];*/
+    ];
 
+    //console.log(headMapData2);
+    
     geopoints.then(function(geopoints){
-      console.log(geopoints.payload.data);
+      //console.log(geopoints.payload.data);
       let heatMapData = [];
 
       geopoints.payload.data.map(function(geo){
-        heatMapData.push(new google.maps.LatLng(geo.latitude, geo.longitude))
+        console.log(geo.latitude+" "+geo.longitude);
+        if(geo.latitude && geo.longitude)
+          heatMapData.push({location: new google.maps.LatLng(geo.latitude, geo.longitude),
+                            weight: 1 });
       });
-
-      let sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
+      
+      console.log(heatMapData);
+  
+      let sanFrancisco = new google.maps.LatLng(41.86, -87.66);
 
       let map = new google.maps.Map(document.getElementById('map'), {
         center: sanFrancisco,
@@ -52,7 +59,6 @@ class ClusterGoogleMap extends Component {
 
       heatmap.setMap(map);
     });
-    
   }
 
   render() {
