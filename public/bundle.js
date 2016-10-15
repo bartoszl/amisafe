@@ -29464,12 +29464,10 @@
 	function fetchGeopoints() {
 	  var startDate = '2016-01-01T00:00:00';
 	  var stopDate = '2016-06-30T23:59:59';
-	  var limit = 50;
+	  var limit = 300;
 
 	  var req = _axios2.default.get('' + CHICAGO_URL, {
 	    params: {
-	      "$where": "date between \'" + startDate + "\' and \'" + stopDate + "\'",
-	      "domestic": false,
 	      "$limit": limit
 	    }
 	  });
@@ -31137,33 +31135,23 @@
 	    value: function componentDidMount() {
 	      var geopoints = this.props.fetchGeopoints();
 
-	      /*
-	      var heatMapData = [
-	        {location: new google.maps.LatLng(37.782, -122.447), weight: 0.5},
-	        new google.maps.LatLng(37.782, -122.445),
-	        {location: new google.maps.LatLng(37.782, -122.443), weight: 2},
-	        {location: new google.maps.LatLng(37.782, -122.441), weight: 3},
-	        {location: new google.maps.LatLng(37.782, -122.439), weight: 2},
-	        new google.maps.LatLng(37.782, -122.437),
-	        {location: new google.maps.LatLng(37.782, -122.435), weight: 0.5},
-	         {location: new google.maps.LatLng(37.785, -122.447), weight: 3},
-	        {location: new google.maps.LatLng(37.785, -122.445), weight: 2},
-	        new google.maps.LatLng(37.785, -122.443),
-	        {location: new google.maps.LatLng(37.785, -122.441), weight: 0.5},
-	        new google.maps.LatLng(37.785, -122.439),
-	        {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
-	        {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
-	      ];*/
+	      var heatMapData2 = [{ location: new google.maps.LatLng(37.782, -122.447), weight: 0.5 }, new google.maps.LatLng(37.782, -122.445), { location: new google.maps.LatLng(37.782, -122.443), weight: 2 }, { location: new google.maps.LatLng(37.782, -122.441), weight: 3 }, { location: new google.maps.LatLng(37.782, -122.439), weight: 2 }, new google.maps.LatLng(37.782, -122.437), { location: new google.maps.LatLng(37.782, -122.435), weight: 0.5 }, { location: new google.maps.LatLng(37.785, -122.447), weight: 3 }, { location: new google.maps.LatLng(37.785, -122.445), weight: 2 }, new google.maps.LatLng(37.785, -122.443), { location: new google.maps.LatLng(37.785, -122.441), weight: 0.5 }, new google.maps.LatLng(37.785, -122.439), { location: new google.maps.LatLng(37.785, -122.437), weight: 2 }, { location: new google.maps.LatLng(37.785, -122.435), weight: 3 }];
+
+	      //console.log(headMapData2);
 
 	      geopoints.then(function (geopoints) {
-	        console.log(geopoints.payload.data);
+	        //console.log(geopoints.payload.data);
 	        var heatMapData = [];
 
 	        geopoints.payload.data.map(function (geo) {
-	          heatMapData.push(new google.maps.LatLng(geo.latitude, geo.longitude));
+	          console.log(geo.latitude + " " + geo.longitude);
+	          if (geo.latitude && geo.longitude) heatMapData.push({ location: new google.maps.LatLng(geo.latitude, geo.longitude),
+	            weight: 1 });
 	        });
 
-	        var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
+	        console.log(heatMapData);
+
+	        var sanFrancisco = new google.maps.LatLng(41.86, -87.66);
 
 	        var map = new google.maps.Map(document.getElementById('map'), {
 	          center: sanFrancisco,
