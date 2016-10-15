@@ -1,10 +1,10 @@
 var axios = require('axios');
 
-test4 = function(){
+radiusSafetyCheck = function(){
 
 };
 
-test4.prototype.getInfo = function(lat, long)  {
+radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
 
     var dataPromise = this.lookUpCrimeOverPeriod(lat, long);
     dataPromise.then(function(response){
@@ -70,7 +70,7 @@ test4.prototype.getInfo = function(lat, long)  {
 
 };
 
-test4.prototype.lookUpCrimeOverPeriod = function(lat, long){
+radiusSafetyCheck.prototype.lookUpCrimeOverPeriod = function(lat, long){
   return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
           params: {
             "$where":  "date between '2016-04-01T00:00:00' and '2016-10-01T00:00:00' and within_circle(location, "+lat+", "+long+", 500)"
