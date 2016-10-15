@@ -20,4 +20,5 @@ console.log("/****************Crimes Committed in Chicago from " + startDate + "
 // console.log("Locations: ");
 // dataHelper.getLocation(startDate, stopDate);
 // dataHelper.getCoordinates(type, startDate, stopDate, limit);
-dataHelper.getCommunityAreas(startDate, stopDate);
+// dataHelper.getCommunityAreas(startDate, stopDate);
+dataHelper.getAll(startDate,stopDate,10);

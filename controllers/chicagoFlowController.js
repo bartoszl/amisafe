@@ -89,6 +89,24 @@ chicagoFlowController.prototype.getCrimeCountByArea = function(startDate,stopDat
   crime types are defined in a measurementTypes array
 */
 
+chicagoFlowController.prototype.getAll = function(startDate, stopDate, limit){
+  return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
+          params: {
+            "$where": "date between \'" +startDate+ "\' and \'"+stopDate+"\'",
+            "domestic": false,
+            "$limit" : limit
+
+
+          }
+    }).then(function(result){
+      result.data.map(function(entry){
+        console.log(entry);
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
+};
+
 chicagoFlowController.prototype.getInfo = function(startDate, stopDate, measurementTypes, limit){
 
     var dataPromise = this.lookUpAllOverPeriod(startDate, stopDate, limit);
@@ -177,7 +195,7 @@ chicagoFlowController.prototype.getCommunityAreas = function(startDate, stopDate
   areaCrimes = {};
   var dataPromise = this.lookUpAllOverPeriod(startDate, stopDate, 100);
   dataPromise.then(function(result){
-    result.data.map(function(entry){    
+    result.data.map(function(entry){
       if(areaCrimes[entry.community_area]) {
         areaCrimes[entry.community_area] ++;
       } else {
