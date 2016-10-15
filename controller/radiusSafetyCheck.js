@@ -45,7 +45,7 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
 
       };
 
-        var chicagoAvg = 29.79443964275425;
+        var chicagoAvg = 28.44645090385417;
         var total = 0;
         for(var i = 0; i < response.data.length; i++) {
           var str = response.data[i].primary_type;

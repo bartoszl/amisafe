@@ -3,7 +3,7 @@ var axios = require('axios');
 axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
     params: {
       //"$where": "within_circle(location, 41.86, -87.66, 50)",
-      "$where": "date between '2016-04-01T00:00:00' and '2016-10-01T00:00:00'"
+      "$where": "date between '2015-10-01T00:00:00' and '2016-10-01T00:00:00'"
       // "community_area": 1
       // "$where":  "date between '2016-04-01T00:00:00' and '2016-10-01T00:00:00' and within_circle(location, 41.86, -87.66, 250)"
       // "domestic": false
@@ -31,6 +31,7 @@ axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
       LIQUOR_LAW_VIOLATION: '10',
       MOTOR_VEHICLE_THEFT: '35',
       NARCOTICS: '20',
+      NON_CRIMINAL: '10',
       OBSCENITY: '10',
       OFFENSE_INVOLVING_CHILDREN: '70',
       OTHER_NARCOTIC_VIOLATION: '40',
@@ -43,9 +44,7 @@ axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
       SEX_OFFENSE: '60',
       STALKING: '50',
       THEFT: '25',
-      WEAPONS_VIOLATION: '60',
-      NON_CRIMINAL: '10'
-
+      WEAPONS_VIOLATION: '60'
     };
 
     var output = [];
@@ -57,18 +56,23 @@ axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
     console.log(response.data.length);
     for(var i = 0; i < response.data.length; i++) {
       var str = response.data[i].primary_type;
-      while(str.includes(" ") || str.includes("-"))  {
+      while(str.includes(" ") || str.includes("-") || str.includes("__"))  {
         str = str.replace(" ", "_");
         str = str.replace("-", "_");
+        str = str.replace("__", "_");
       }
       // console.log(response.data[i].community_area + " | " + str + " | " + crimeScores[str]);
-      output[response.data[i].community_area]++;
-      output[response.data[i].community_area] = output[response.data[i].community_area] + parseInt(crimeScores[str]);
+      if(isNaN(crimeScores[str])) {
+        console.log("primary_type formatted strangely: " + response.data[i].primary_type);
+      } else {
+        output2[response.data[i].community_area]++;
+        output[response.data[i].community_area] = output[response.data[i].community_area] + parseInt(crimeScores[str]);
+      }
       // output[response.data[i].community_area]++;
     }
 
     for(var i = 1; i < 78; i++) {
-      console.log("Community Area: " + i + " | Number of Crimes" + output2[i] + " | Crime Score: " + output[i]);
+      console.log("Community Area: " + i + " | Number of Crimes: " + output2[i] + " | Crime Score: " + output[i]);
     }
 
     console.log("Total Crimes: " + response.data.length);
