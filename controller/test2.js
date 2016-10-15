@@ -1,8 +1,6 @@
 var rSC = require('./radiusSafetyCheck.js');
-var sP = require('./safetyPrediction.js');
 
 var rSC = new radiusSafetyCheck();
-var sP = new safetyPrediction();
 
 // rSC.getInfo(41.75, -87.71);
 // rSC.getInfo(41.75, -87.72);
@@ -14,13 +12,12 @@ var sP = new safetyPrediction();
 // rSC.getInfo(41.76, -87.73);
 // rSC.getInfo(41.76, -87.74);
 // rSC.getInfo(41.76, -87.75);
-var check = rSC.getInfo(41.77, -87.71);
-sP.getSafety(check);
+// rSC.getInfo(41.77, -87.71);
 // rSC.getInfo(41.77, -87.72);
 // rSC.getInfo(41.77, -87.73);
 // rSC.getInfo(41.77, -87.74);
 // rSC.getInfo(41.77, -87.75);
-// rSC.getInfo(41.78, -87.71);
+rSC.getInfo(41.78, -87.71);
 // rSC.getInfo(41.78, -87.72);
 // rSC.getInfo(41.78, -87.73);
 // rSC.getInfo(41.78, -87.74);

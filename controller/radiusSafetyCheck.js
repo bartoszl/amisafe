@@ -1,5 +1,8 @@
 var axios = require('axios');
+var moment = require('moment');
+var sP = require('./safetyPrediction.js');
 
+var sP = new safetyPrediction();
 radiusSafetyCheck = function(){
 
 };
@@ -56,14 +59,27 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
           total = total + parseInt(crimeScores[str]);
         }
 
-        var areaAvg = (total/response.data.length)-(chicagoAvg/2);
-        var avgCalc = (areaAvg/(chicagoAvg/2))*100;
-        if(isNaN(avgCalc)) {
-          // console.log("Area is not in range of any crimes.");
-        } else {
-          console.log("Lat: " + lat + ", Long: " + long + " | Crime Severity: " + avgCalc);
-        }
+        var areaAvg = (total/response.data.length);
+        var avgCalc = (areaAvg/chicagoAvg)*100;
+        // if(isNaN(avgCalc)) {
+        //   console.log("Area is not in range of any crimes.");
+        // } else {
+        //   console.log("Lat: " + lat + ", Long: " + long + " | Crime Severity: " + avgCalc);
+        // }
         // console.log("Lat: " + lat + " | Long: " + long + " | Total Crimes: " + response.data.length + " | Total Crime Score: " + total + " | Area Average: " + avgCalc);
+
+        latestCrime = response.data[response.data.length-1].date;
+        latestCrime = moment(latestCrime).unix();
+
+        var isoNow = moment().unix();
+        // console.log(isoNow + " | " + latestCrime);
+
+        latestCrime = moment(isoNow - latestCrime).format('hh');
+        // console.log(latestCrime);
+
+        var crimesPerDay = (response.data.length/183);
+        // console.log(response.data.length + " | " + crimesPerDay);
+        sP.getSafety(total, avgCalc, latestCrime, crimesPerDay);
     }).catch(function (error) {
       console.log(error);
     });
@@ -71,9 +87,18 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
 };
 
 radiusSafetyCheck.prototype.lookUpCrimeOverPeriod = function(lat, long){
+
+  var isoNow = moment().format();
+  var isoOld = moment(isoNow).subtract(6, 'months').format();
+
+  isoNow = moment(isoNow).format().split('+')[0];
+  isoOld = moment(isoOld).format().split('+')[0];
+
+  // console.log(isoOld + " | " + isoNow);
+
   return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
           params: {
-            "$where":  "date between '2016-04-01T00:00:00' and '2016-10-01T00:00:00' and within_circle(location, "+lat+", "+long+", 500)"
+            "$where":  "date between '" + isoOld + "' and '" + isoNow + "' and within_circle(location, "+lat+", "+long+", 500)"
           }
     });
 
