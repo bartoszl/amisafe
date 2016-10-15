@@ -3,7 +3,7 @@ var moment = require('moment');
 
 //defining const
 
-const RADIUS = '250';
+const RADIUS = '400';
 const LATITUDE = '41.86';
 const LONGITUDE = '-87.66';
 
