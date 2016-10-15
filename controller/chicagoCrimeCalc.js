@@ -1,9 +1,16 @@
 var axios = require('axios');
+var moment = require('moment');
+
+var isoNow = moment().format();
+var isoOld = moment(isoNow).subtract(1, 'years').format();
+
+isoNow = moment(isoNow).format().split('+')[0];
+isoOld = moment(isoOld).format().split('+')[0];
 
 axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
     params: {
       //"$where": "within_circle(location, 41.86, -87.66, 50)",
-      "$where": "date between '2015-10-01T00:00:00' and '2016-10-01T00:00:00'"
+      "$where": "date between '" + isoOld + "' and '" + isoNow + "'"
       // "community_area": 1
       // "$where":  "date between '2016-04-01T00:00:00' and '2016-10-01T00:00:00' and within_circle(location, 41.86, -87.66, 250)"
       // "domestic": false
