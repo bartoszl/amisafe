@@ -5,7 +5,6 @@ chicagoFlowController = function(){
 };
 
 
-
     /********************* INFO FETCH METHODS ************************/
 
 /*
@@ -67,6 +66,17 @@ chicagoFlowController.prototype.lookUpCrimeInZone = function(lat, long, rad){
             "$where": "date between '2016-01-01T00:00:00' and '2016-01-30T23:59:59' and within_circle(location, " + lat + ", " + long + ", " + rad + ")",
             "domestic": false,
             // "arrest": true,
+
+          }
+    });
+};
+
+chicagoFlowController.prototype.getCrimeCountByArea = function(startDate,stopDate,area){
+  return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
+          params: {
+            "$where": "date between \'" +startDate+ "\' and \'"+stopDate+"\'",
+            "domestic": false,
+            "community_area": area
 
           }
     });
@@ -157,6 +167,24 @@ chicagoFlowController.prototype.getCoordinates = function(type, startDate, stopD
     result.data.map(function(entry){
       console.log(entry);
     });
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+chicagoFlowController.prototype.getCommunityAreas = function(startDate, stopDate) {
+
+  areaCrimes = {};
+  var dataPromise = this.lookUpAllOverPeriod(startDate, stopDate, 100);
+  dataPromise.then(function(result){
+    result.data.map(function(entry){    
+      if(areaCrimes[entry.community_area]) {
+        areaCrimes[entry.community_area] ++;
+      } else {
+        areaCrimes[entry.community_area]=1;
+      }
+    });
+    console.log(areaCrimes);
   }).catch(function (error) {
     console.log(error);
   });
