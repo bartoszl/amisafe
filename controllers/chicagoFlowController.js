@@ -4,6 +4,10 @@ chicagoFlowController = function(){
 
 };
 
+
+
+    /********************* INFO FETCH METHODS ************************/
+
 /*
   look up all crimes over a specific timespan
 */
@@ -30,7 +34,7 @@ chicagoFlowController.prototype.lookUpCrimeOverPeriod = function(type, startDate
           params: {
             "$where": "date between \'" +startDate+ "\' and \'"+stopDate+"\'",
             "domestic": false,
-            "$limit" : limit
+            "$limit" : limit,
             // "arrest": true,
             "primary_type": type
           }
@@ -68,6 +72,8 @@ chicagoFlowController.prototype.lookUpCrimeInZone = function(lat, long, rad){
     });
 };
 
+    /********************* INFO Logic METHODS ************************/
+
 /*
   displays crimes with attributes of our chosing over a timespan
   crime types are defined in a measurementTypes array
@@ -93,11 +99,10 @@ chicagoFlowController.prototype.getInfo = function(startDate, stopDate, measurem
 
 chicagoFlowController.prototype.getSpecificInfo = function(type, startDate, stopDate, limit){
 
-    var dataPromise = this.lookUpAllOverPeriod(type, startDate, stopDate, limit);
+    var dataPromise = this.lookUpCrimeOverPeriod(type, startDate, stopDate, limit);
     dataPromise.then(function(result){
       result.data.map(function(entry){
-
-        console.log("\nDescription: " + entry[type]);
+        console.log("\ndescriptions: " + entry.description);
       });
     }).catch(function (error) {
       console.log(error);
@@ -128,6 +133,29 @@ chicagoFlowController.prototype.getCrimeByLocation = function(lat, long, rad){
     console.log("Crime Variety Count: " + result.data.length);
     result.data.map(function(entry){
       console.log("Crime Variety: " + entry.description);
+    });
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+chicagoFlowController.prototype.getLocation = function(startDate, stopDate){
+  var dataPromise = this.lookUpAllOverPeriod(startDate, stopDate, 1000);
+  dataPromise.then(function(result){
+
+    result.data.map(function(entry){
+      console.log("Locations: " + entry.location);
+    });
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+chicagoFlowController.prototype.getCoordinates = function(type, startDate, stopDate){
+  var dataPromise = this.lookUpCrimeOverPeriod(type, startDate, stopDate, 100);
+  dataPromise.then(function(result){
+    result.data.map(function(entry){
+      console.log(entry);
     });
   }).catch(function (error) {
     console.log(error);
