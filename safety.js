@@ -1,21 +1,22 @@
 var axios = require('axios');
-var dateFormat = require('dateformat');
+var moment = require('moment');
 
 //defining const
 
-const RADIUS = '100';
-const LATITUDE = '41.69';
-const LONGITUDE = '-87.63';
+const RADIUS = '250';
+const LATITUDE = '41.86';
+const LONGITUDE = '-87.66';
 
 //defining variable
 
-var timestampNow = Date.now();
-var timestampThreeMonthsAgo = timestampNow - 7776000000;
+var timestampNow = moment().unix();
+var timestampThreeMonthsAgo = moment().subtract(3, 'months').format();
 
-var isoNow = dateFormat(timestampNow, "isoDateTime").split('T')[0] +'T00:00:00.000';
-var isoThreeMonthsAgo = dateFormat(timestampThreeMonthsAgo, "isoDateTime").split('T')[0] +'T00:00:00.000';
+var isoNow = moment().format().split('+')[0];
+var isoThreeMonthsAgo = moment(timestampThreeMonthsAgo).format().split('+')[0];
 
 var result =[]
+var latestCrime = 0;
 
 //Beginning of the code
 
@@ -23,7 +24,7 @@ axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json?', {
 	params :
 		{
 			 
-			"$where": "date between '"+isoNow+"' and '"+isoThreeMonthsAgo+"' and within_circle(location, "+LATITUDE+", "+LONGITUDE+", "+RADIUS+")"
+			"$where": "date between '"+isoThreeMonthsAgo+"' and '"+isoNow+"' and within_circle(location, "+LATITUDE+", "+LONGITUDE+", "+RADIUS+")"
 		}
 })
   .then(function (response) {
@@ -34,10 +35,39 @@ axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json?', {
 	  		result.push(response.data[i]);
 	  	}
 	  }
-	  
-		console.log(response.data.length);
-    
-  	console.log(result.length);
+
+	  latestCrime = result[result.length-1].date;
+	  console.log(latestCrime)
+	  latestCrime = moment(latestCrime).unix();
+
+	  latestCrime = moment(timestampNow - latestCrime).format('hh');
+
+	  coefficient = result.length/90;
+
+	  predictionRateCrime = (1 - Math.pow(1-coefficient ,latestCrime/24)) * 100;
+	  worstCaseScenario = (1 - Math.pow(1-coefficient ,(latestCrime+48)/24)) * 100;
+
+	  console.log(result.length)
+	  console.log(coefficient);
+	  console.log(latestCrime);
+	  console.log(predictionRateCrime)
+	  console.log(worstCaseScenario)
+
+    if(result.length<=5){
+ 			console.log('The area is safe')
+
+    } else if((result.length>5) && (result.length<=15)){
+ 			console.log('The area is not safe')
+
+    } else if((result.length>15) && (result.length<=25)){
+ 			console.log('The area is dangerous')
+
+    } else{
+ 			console.log('The area is very dangerous')
+
+    }
+
+   	console.log();
   })
   .catch(function (error) {
     console.log(error);
