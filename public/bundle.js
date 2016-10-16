@@ -79,6 +79,10 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
+	var _statistics = __webpack_require__(343);
+
+	var _statistics2 = _interopRequireDefault(_statistics);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default)(_redux.createStore);
@@ -90,7 +94,8 @@
 	  _react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.browserHistory },
-	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _app2.default })
+	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _app2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/statistics', component: _statistics2.default })
 	  )
 	), document.getElementById('root'));
 
@@ -29406,7 +29411,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var indexReducer = (0, _redux.combineReducers)({
-	  coords: _geo_reducer2.default
+	  geopoints: _geo_reducer2.default
 	});
 
 	exports.default = indexReducer;
@@ -29429,7 +29434,7 @@
 
 	  switch (action.type) {
 	    case _index.FETCH_GEOPOINTS:
-	      return _extends({}, state, { coords: action.payload.data });
+	      return _extends({}, state, { geopoints: action.payload.data });
 	  }
 
 	  return state;
@@ -29464,17 +29469,18 @@
 	function fetchGeopoints() {
 	  var startDate = '2016-01-01T00:00:00';
 	  var stopDate = '2016-06-30T23:59:59';
-	  var limit = 300;
+	  var limit = 100000;
 
-	  var req = _axios2.default.get('' + CHICAGO_URL, {
+	  var theft = _axios2.default.get('' + CHICAGO_URL, {
 	    params: {
+	      "$where": "date between \'" + startDate + "\' and \'" + stopDate + "\'",
 	      "$limit": limit
 	    }
 	  });
 
 	  return {
 	    type: FETCH_GEOPOINTS,
-	    payload: req
+	    payload: theft
 	  };
 	}
 
@@ -30979,6 +30985,10 @@
 
 	var _google_map2 = _interopRequireDefault(_google_map);
 
+	var _navbar = __webpack_require__(342);
+
+	var _navbar2 = _interopRequireDefault(_navbar);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31002,8 +31012,9 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_search_bar2.default, null),
-	        _react2.default.createElement(_google_map2.default, null)
+	        _react2.default.createElement(_navbar2.default, null),
+	        _react2.default.createElement(_google_map2.default, null),
+	        _react2.default.createElement(_search_bar2.default, null)
 	      );
 	    }
 	  }]);
@@ -31052,26 +31063,111 @@
 	var SearchBar = function (_Component) {
 	  _inherits(SearchBar, _Component);
 
-	  function SearchBar() {
+	  function SearchBar(props) {
 	    _classCallCheck(this, SearchBar);
 
-	    return _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
+
+	    _this.state = { term: '' };
+	    _this.onInputChange = _this.onInputChange.bind(_this);
+	    _this.onFormSubmit = _this.onFormSubmit.bind(_this);
+	    _this.getCurrentLocation = _this.getCurrentLocation.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(SearchBar, [{
+	    key: 'onInputChange',
+	    value: function onInputChange(e) {
+	      this.setState({ term: e.target.value });
+	    }
+	  }, {
+	    key: 'onFormSubmit',
+	    value: function onFormSubmit(e) {
+	      e.preventDefault();
+
+	      //this.props.fetchWeather(this.state.term);
+	      this.setState({ term: '' });
+	    }
+	  }, {
+	    key: 'getCurrentLocation',
+	    value: function getCurrentLocation(e) {
+	      e.preventDefault();
+
+	      var pos = {};
+
+	      if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function (position) {
+	          pos = {
+	            lat: position.coords.latitude,
+	            lng: position.coords.longitude
+	          };
+	          console.log(pos.lat + " " + pos.lng);
+	        });
+	        this.setState({ term: "Current Position" });
+	      }
+	    }
+	  }, {
+	    key: 'getSafetyIndicator',
+	    value: function getSafetyIndicator(e) {
+	      e.preventDefault();
+	      var address = this.state.term;
+
+	      _axios2.default.post('/api/address', {
+	        address: address
+	      }).then(function (response) {
+	        console.log(response);
+	      }).catch(function (error) {
+	        console.log(error);
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'container col-sm-4 col-sm-offset-4' },
+	        { className: 'container-fluid', style: { backgroundColor: "#222" } },
 	        _react2.default.createElement(
-	          'form',
-	          { className: 'form-inline' },
-	          _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Location' }),
+	          'div',
+	          { className: 'col-sm-3 col-sm-offset-1' },
+	          _react2.default.createElement('img', {
+	            className: '',
+	            src: '/img/dinosaur.png',
+	            style: { height: '150px', width: 'auto', marginTop: '50px' } })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'container col-sm-4' },
 	          _react2.default.createElement(
-	            'button',
-	            { className: 'btn btn-success' },
-	            'Am I Safe?!'
+	            'form',
+	            { style: { textAlign: "center", marginBottom: "150px" } },
+	            _react2.default.createElement('input', {
+	              type: 'text',
+	              className: 'form-control form-control-lg',
+	              placeholder: 'Enter Location',
+	              value: this.state.term,
+	              onChange: this.onInputChange,
+	              style: {
+	                borderRadius: '25px',
+	                marginTop: '50px',
+	                marginBottom: '25px'
+	              }
+	            }),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'btn btn-success',
+	                style: { borderRadius: '25px' },
+	                onClick: this.getSafetyIndicator.bind(this) },
+	              'Is the neighbourhood safe?!'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                className: 'btn btn-info',
+	                style: { borderRadius: '25px' },
+	                onClick: this.getCurrentLocation },
+	              'Get your current location.'
+	            )
 	          )
 	        )
 	      );
@@ -31131,32 +31227,28 @@
 	  }
 
 	  _createClass(ClusterGoogleMap, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
 	      var geopoints = this.props.fetchGeopoints();
 
-	      var heatMapData2 = [{ location: new google.maps.LatLng(37.782, -122.447), weight: 0.5 }, new google.maps.LatLng(37.782, -122.445), { location: new google.maps.LatLng(37.782, -122.443), weight: 2 }, { location: new google.maps.LatLng(37.782, -122.441), weight: 3 }, { location: new google.maps.LatLng(37.782, -122.439), weight: 2 }, new google.maps.LatLng(37.782, -122.437), { location: new google.maps.LatLng(37.782, -122.435), weight: 0.5 }, { location: new google.maps.LatLng(37.785, -122.447), weight: 3 }, { location: new google.maps.LatLng(37.785, -122.445), weight: 2 }, new google.maps.LatLng(37.785, -122.443), { location: new google.maps.LatLng(37.785, -122.441), weight: 0.5 }, new google.maps.LatLng(37.785, -122.439), { location: new google.maps.LatLng(37.785, -122.437), weight: 2 }, { location: new google.maps.LatLng(37.785, -122.435), weight: 3 }];
-
-	      //console.log(headMapData2);
-
 	      geopoints.then(function (geopoints) {
-	        //console.log(geopoints.payload.data);
+	        console.log(geopoints.payload.data.length);
 	        var heatMapData = [];
 
 	        geopoints.payload.data.map(function (geo) {
-	          console.log(geo.latitude + " " + geo.longitude);
-	          if (geo.latitude && geo.longitude) heatMapData.push({ location: new google.maps.LatLng(geo.latitude, geo.longitude),
-	            weight: 1 });
+	          if (geo.latitude && geo.longitude) {
+	            heatMapData.push({ location: new google.maps.LatLng(geo.latitude, geo.longitude),
+	              weight: 1 });
+	          }
 	        });
 
-	        console.log(heatMapData);
-
-	        var sanFrancisco = new google.maps.LatLng(41.86, -87.66);
+	        var chicago = new google.maps.LatLng(41.86, -87.66);
 
 	        var map = new google.maps.Map(document.getElementById('map'), {
-	          center: sanFrancisco,
+	          center: chicago,
 	          zoom: 13,
-	          mapTypeId: 'satellite'
+	          mapTypeId: 'satellite',
+	          styles: [{ "elementType": "geometry", "stylers": [{ "hue": "#ff4400" }, { "saturation": -68 }, { "lightness": -4 }, { "gamma": 0.72 }] }, { "featureType": "road", "elementType": "labels.icon" }, { "featureType": "landscape.man_made", "elementType": "geometry", "stylers": [{ "hue": "#0077ff" }, { "gamma": 3.1 }] }, { "featureType": "water", "stylers": [{ "hue": "#00ccff" }, { "gamma": 0.44 }, { "saturation": -33 }] }, { "featureType": "poi.park", "stylers": [{ "hue": "#44ff00" }, { "saturation": -23 }] }, { "featureType": "water", "elementType": "labels.text.fill", "stylers": [{ "hue": "#007fff" }, { "gamma": 0.77 }, { "saturation": 65 }, { "lightness": 99 }] }, { "featureType": "water", "elementType": "labels.text.stroke", "stylers": [{ "gamma": 0.11 }, { "weight": 5.6 }, { "saturation": 99 }, { "hue": "#0091ff" }, { "lightness": -86 }] }, { "featureType": "transit.line", "elementType": "geometry", "stylers": [{ "lightness": -48 }, { "hue": "#ff5e00" }, { "gamma": 1.2 }, { "saturation": -23 }] }, { "featureType": "transit", "elementType": "labels.text.stroke", "stylers": [{ "saturation": -64 }, { "hue": "#ff9100" }, { "lightness": 16 }, { "gamma": 0.47 }, { "weight": 2.7 }] }]
 	        });
 
 	        var heatmap = new google.maps.visualization.HeatmapLayer({
@@ -31169,7 +31261,11 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('div', { id: 'map', style: { height: '500px', width: '500px' } });
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('div', { id: 'map', style: { height: '650px', width: '100%' } })
+	      );
 	    }
 	  }]);
 
@@ -35467,6 +35563,135 @@
 	});
 	exports["default"] = ["places_changed"];
 	module.exports = exports["default"];
+
+/***/ },
+/* 342 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(188);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (props) {
+	  return _react2.default.createElement(
+	    'nav',
+	    { className: 'navbar navbar-inverse', style: { marginBottom: 0 } },
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'container' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'navbar-header' },
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', className: 'navbar-toggle', 'data-toggle': 'collapse', 'data-target': '#roman-collapsed', 'aria-expanded': 'false' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Toggle navigation'
+	          ),
+	          _react2.default.createElement('span', { className: 'icon-bar' }),
+	          _react2.default.createElement('span', { className: 'icon-bar' }),
+	          _react2.default.createElement('span', { className: 'icon-bar' })
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/', className: 'navbar-brand' },
+	          'Neighbourhood Watch'
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'collapse navbar-collapse', id: 'roman-collapsed' },
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'nav navbar-nav navbar-right' },
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/statistics' },
+	              ' Statistics '
+	            )
+	          )
+	        )
+	      )
+	    )
+	  );
+	};
+
+/***/ },
+/* 343 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _google_map = __webpack_require__(295);
+
+	var _google_map2 = _interopRequireDefault(_google_map);
+
+	var _navbar = __webpack_require__(342);
+
+	var _navbar2 = _interopRequireDefault(_navbar);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Statistics = function (_Component) {
+	  _inherits(Statistics, _Component);
+
+	  function Statistics() {
+	    _classCallCheck(this, Statistics);
+
+	    return _possibleConstructorReturn(this, (Statistics.__proto__ || Object.getPrototypeOf(Statistics)).apply(this, arguments));
+	  }
+
+	  _createClass(Statistics, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_navbar2.default, null),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          ' Hi Mom! '
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Statistics;
+	}(_react.Component);
+
+	exports.default = Statistics;
 
 /***/ }
 /******/ ]);

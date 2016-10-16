@@ -9,7 +9,7 @@ Router.get('/', function(req, res, next) {
 Router.get('/points', function(req, res, next){
   const startDate = '2016-01-01T00:00:00';
   const stopDate = '2016-06-30T23:59:59';
-  const limit = 50;
+  const limit = 10000;
 
   axios.get('https://data.cityofchicago.org/resource/6zsd-86xi.json', {
       params: {
@@ -37,8 +37,10 @@ Router.post('/address', function(req, res, next){
     var dataPromise = this.lookUpAddress(req.body.address);
     dataPromise.then(function(result){
        console.log(result.data.results[0].geometry.location);
+       res.send(result);
     }).catch(function (error) {
       console.log(error);
+      res.send(error);
     });
   };
 })

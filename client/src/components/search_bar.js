@@ -41,10 +41,31 @@ class SearchBar extends Component {
     }
   }
 
+  getSafetyIndicator(e) {
+    e.preventDefault();
+    let address = this.state.term;
+
+    axios.post('/api/address', {
+      address: address
+    })
+    .then(function(response){
+      console.log(response);
+    })
+    .catch(function(error){
+      console.log(error);
+    })
+  }
+
   render() {
     return (
       <div className="container-fluid" style={{backgroundColor:"#222"}}>
-        <div className="container col-sm-4 col-sm-offset-4">
+        <div className="col-sm-3 col-sm-offset-1">
+          <img 
+            className="" 
+            src="/img/dinosaur.png" 
+            style={{ height: '150px', width: 'auto', marginTop: '50px'}}/>
+        </div>
+        <div className="container col-sm-4">
           <form style={{textAlign: "center", marginBottom: "150px"}}>
             <input 
               type="text" 
@@ -60,7 +81,8 @@ class SearchBar extends Component {
             />
             <button 
               className="btn btn-success" 
-              style={{ borderRadius:'25px' }}>
+              style={{ borderRadius:'25px'}}
+              onClick={this.getSafetyIndicator.bind(this)}>
                 Is the neighbourhood safe?!
             </button>
             <button 
