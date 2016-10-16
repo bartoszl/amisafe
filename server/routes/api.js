@@ -30,9 +30,9 @@ Router.get('/points', function(req, res, next){
 });
 
 Router.post('/address', function(req, res, next){
-  const average = 28.47562703011064;
+  const average = 20;
   var total = 0;
-  var threshold = 5;
+  var threshold = 2;
   var score = 0;
   location = {};
   var crimes = [];
@@ -45,7 +45,7 @@ Router.post('/address', function(req, res, next){
     const startDate = '2016-01-01T00:00:00';
     const stopDate = '2016-06-30T23:59:59';
 
-    return crimeController.lookUpCrimeInZone(lat,lng, 200, startDate, stopDate);
+    return crimeController.lookUpCrimeInZone(lat,lng, 2500, startDate, stopDate);
   }).then(function(result){
     result.data.map(function(entry){
       console.log(entry.primary_type);
@@ -55,9 +55,10 @@ Router.post('/address', function(req, res, next){
     });
     var i;
     for(i = 0;i < crimes.length; i++){
-      console.log("crime: " + crimes[i]);
+
       // crimeController.getScore(crimes[i]);
       score += crimeController.getScore(crimes[i]);
+      console.log(score);
     }
     total = score/(crimes.length);
     console.log(score);
