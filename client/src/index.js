@@ -8,6 +8,7 @@ import ReduxPromise from 'redux-promise';
 import reducers from './reducers';
 
 import App from './components/app';
+import Statistics from './components/statistics';
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 const store = createStoreWithMiddleware(reducers);
@@ -17,6 +18,7 @@ ReactDOM.render(
     <Router history={browserHistory}>
       <Route path="/" component={App}>
       </Route>
+      <Route path="/statistics" component={Statistics} />
     </Router>
   </Provider>,
   document.getElementById('root')
