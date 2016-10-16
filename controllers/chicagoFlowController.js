@@ -60,10 +60,10 @@ chicagoFlowController.prototype.lookUpZone = function(type, lat, long, rad){
   look up all crimes in a location
 */
 
-chicagoFlowController.prototype.lookUpCrimeInZone = function(lat, long, rad){
+chicagoFlowController.prototype.lookUpCrimeInZone = function(lat, long, rad, startDate, stopDate){
   return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
           params: {
-            "$where": "date between '2016-01-01T00:00:00' and '2016-01-30T23:59:59' and within_circle(location, " + lat + ", " + long + ", " + rad + ")",
+            "$where": "date between \'" +startDate+ "\' and \'"+stopDate+"\' and within_circle(location, " + lat + ", " + long + ", " + rad + ")",
             "domestic": false,
             // "arrest": true,
 
@@ -97,6 +97,23 @@ chicagoFlowController.prototype.lookUpAddress = function(address){
   displays crimes with attributes of our chosing over a timespan
   crime types are defined in a measurementTypes array
 */
+chicagoFlowController.prototype.getAverage = function(startDate, stopDate){
+  return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
+          params: {
+            "$where": "date between \'" +startDate+ "\' and \'"+stopDate+"\'",
+            "domestic": false,
+          }
+  });
+};
+
+chicagoFlowController.prototype.calculateAverage = function(startDate, stopDate){
+  var dataPromise = this.getAverage(startDate, stopDate);
+  dataPromise.then(function(result){
+  var total = result.data.length;
+  var average = total/77;
+  console.log(average);
+  })
+};
 
 chicagoFlowController.prototype.getAll = function(startDate, stopDate, limit){
   return axios.get("https://data.cityofchicago.org/resource/6zsd-86xi.json", {
@@ -211,33 +228,100 @@ chicagoFlowController.prototype.getCommunityAreas = function(startDate, stopDate
         areaCrimes[entry.community_area]=1;
       }
     });
-    console.log(areaCrimes);
+    return areaCrimes;
   }).catch(function (error) {
     console.log(error);
   });
 };
 
-chicagoFlowController.prototype.getCoordinatedFromAddress = function(address){
-  var dataPromise = this.lookUpAddress(address);
-  dataPromise.then(function(result){
-     console.log(result.data.results[0].geometry.location);
-  }).catch(function (error) {
-    console.log(error);
+chicagoFlowController.prototype.getCoordinatesFromAddress = function(address){
+  return new Promise(function(resolve, reject){
+
+    var dataPromise = this.lookUpAddress(address);
+    dataPromise.then(function(result){
+       console.log(result.data.results[0].geometry.location);
+    }).catch(function (error) {
+      console.log(error);
+    });
+
   });
+
 };
 
+
+chicagoFlowController.prototype.setScores = function(){
+
+  return scores;
+};
+
+
+chicagoFlowController.prototype.getScore = function(crimeType){
+  var scores = {
+    ARSON: 50,
+    ASSAULT: 60,
+    BATTERY: 30,
+    BURGLARY: 25,
+    CONCEALED_CARRY_LICENSE_VIOLATION: 15,
+    CRIM_SEXUAL_ASSAULT: 70,
+    CRIMINAL_ABORTION: 70,
+    CRIMINAL_DAMAGE: 25,
+    CRIMINAL_TRESPASS: 10,
+    DECEPTIVE_PRACTICE: 5,
+    GAMBLING: 15,
+    HOMICIDE: 100,
+    HUMAN_TRAFFICKING: 70,
+    INTERFERENCE_WITH_PUBLIC_OFFICER: 5,
+    INTIMIDATION: 15,
+    KIDNAPPING: 75,
+    LIQUOR_LAW_VIOLATION: 10,
+    MOTOR_VEHICLE_THEFT: 35,
+    NARCOTICS: 20,
+    NON_CRIMINAL: 10,
+    OBSCENITY: 10,
+    OFFENSE_INVOLVING_CHILDREN: 70,
+    OTHER_NARCOTIC_VIOLATION: 40,
+    OTHER_OFFENSE: 25,
+    PROSTITUTION: 25,
+    PUBLIC_INDECENCY: 30,
+    PUBLIC_PEACE_VIOLATION: 50,
+    RITUALISM: 20,
+    ROBBERY: 25,
+    SEX_OFFENSE: 60,
+    STALKING: 50,
+    THEFT: 25,
+    WEAPONS_VIOLATION: 60
+  };
+
+  var crimeStr = crimeType;
+
+  if(crimeStr.includes(" ")) {
+    crimeStr = crimeStr.replace(/ /g,"_");
+  } else if (crimeStr.includes("-")){
+    crimestr = crimeStr.replace("-", "_");
+  } else if (crimeStr.includes("__")) {
+    crimeStr = crimeStr.replace("__","_");
+  }
+
+  // console.log(crimeStr);
+  // console.log(scores[crimeStr]);
+  var value = scores[crimeStr];
+  console.log("value: " + value);
+  return value;
+};
+
+module.exports = chicagoFlowController;
 /*
   this only works in front end, no navigator in back end
 */
-chicagoFlowController.prototype.getCurrentPosition = function(){
-  if (navigator.geolocation) {
-
-  navigator.geolocation.getCurrentPosition(function(position) {
-           var pos = {
-             lat: position.coords.latitude,
-             lng: position.coords.longitude
-           };
-         });
-       }
-console.log(pos);
-};
+// chicagoFlowController.prototype.getCurrentPosition = function(){
+//   if (navigator.geolocation) {
+//
+//   navigator.geolocation.getCurrentPosition(function(position) {
+//            var pos = {
+//              lat: position.coords.latitude,
+//              lng: position.coords.longitude
+//            };
+//          });
+//        }
+// console.log(pos);
+// };

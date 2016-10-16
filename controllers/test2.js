@@ -1,7 +1,8 @@
 var rSC = require('./radiusSafetyCheck.js');
+var cCC = require('./chicagoCrimeCalc.js');
 
 var rSC = new radiusSafetyCheck();
-
+var calc = new chicagoCrimeCalc();
 // rSC.getInfo(41.75, -87.71);
 // rSC.getInfo(41.75, -87.72);
 // rSC.getInfo(41.75, -87.73);
@@ -17,7 +18,7 @@ var rSC = new radiusSafetyCheck();
 // rSC.getInfo(41.77, -87.73);
 // rSC.getInfo(41.77, -87.74);
 // rSC.getInfo(41.77, -87.75);
-rSC.getInfo(41.78, -87.71);
+// rSC.getInfo(41.78, -87.71);
 // rSC.getInfo(41.78, -87.72);
 // rSC.getInfo(41.78, -87.73);
 // rSC.getInfo(41.78, -87.74);
@@ -27,3 +28,4 @@ rSC.getInfo(41.78, -87.71);
 // rSC.getInfo(41.79, -87.73);
 // rSC.getInfo(41.79, -87.74);
 // rSC.getInfo(41.79, -87.75);
+calc.generateCrimeScore();
