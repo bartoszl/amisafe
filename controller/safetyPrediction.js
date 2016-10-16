@@ -16,17 +16,5 @@ safetyPrediction.prototype.getSafety = function(crimeScore, crimeAvg, latestCrim
 
 	return (predictionRateCrime);
 
-	// if(result.length<=5){
-	// 		console.log('The area is safe')
-	//
-	// } else if((result.length>5) && (result.length<=15)){
-	// 		console.log('The area is not safe')
-	//
-	// } else if((result.length>15) && (result.length<=25)){
-	// 		console.log('The area is dangerous')
-	//
-	// } else{
-	// 		console.log('The area is very dangerous')
-	//
-	// }
+
 }

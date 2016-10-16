@@ -77,6 +77,9 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
         latestCrime = moment(isoNow - latestCrime).format('hh');
         // console.log(latestCrime);
 
+        //total is the total crime score of the radius
+        //avgCalc is the percentage danger level of the current radius compared to the chicago average
+
         var crimesPerDay = (response.data.length/183);
         // console.log(response.data.length + " | " + crimesPerDay);
         var crimePrediction = sP.getSafety(total, avgCalc, latestCrime, crimesPerDay);
@@ -90,7 +93,7 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
 radiusSafetyCheck.prototype.lookUpCrimeOverPeriod = function(lat, long){
 
   var isoNow = moment().format();
-  var isoOld = moment(isoNow).subtract(6, 'months').format();
+  var isoOld = moment(isoNow).subtract(2, 'months').format();
 
   isoNow = moment(isoNow).format().split('+')[0];
   isoOld = moment(isoOld).format().split('+')[0];
