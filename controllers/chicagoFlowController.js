@@ -82,6 +82,15 @@ chicagoFlowController.prototype.getCrimeCountByArea = function(startDate,stopDat
     });
 };
 
+
+chicagoFlowController.prototype.lookUpAddress = function(address){
+  return axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+    params: {
+      "address": address
+    }
+  });
+};
+
     /********************* INFO Logic METHODS ************************/
 
 /*
@@ -99,9 +108,9 @@ chicagoFlowController.prototype.getAll = function(startDate, stopDate, limit){
 
           }
     }).then(function(result){
-      result.data.map(function(entry){
-        console.log(entry);
-      });
+      // result.data.map(function(entry){
+        console.log(result);
+      // });
     }).catch(function(err){
       console.log(err);
     });
@@ -206,4 +215,29 @@ chicagoFlowController.prototype.getCommunityAreas = function(startDate, stopDate
   }).catch(function (error) {
     console.log(error);
   });
+};
+
+chicagoFlowController.prototype.getCoordinatedFromAddress = function(address){
+  var dataPromise = this.lookUpAddress(address);
+  dataPromise.then(function(result){
+     console.log(result.data.results[0].geometry.location);
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+/*
+  this only works in front end, no navigator in back end
+*/
+chicagoFlowController.prototype.getCurrentPosition = function(){
+  if (navigator.geolocation) {
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+           var pos = {
+             lat: position.coords.latitude,
+             lng: position.coords.longitude
+           };
+         });
+       }
+console.log(pos);
 };

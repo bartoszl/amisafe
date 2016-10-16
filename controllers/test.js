@@ -21,4 +21,7 @@ console.log("/****************Crimes Committed in Chicago from " + startDate + "
 // dataHelper.getLocation(startDate, stopDate);
 // dataHelper.getCoordinates(type, startDate, stopDate, limit);
 // dataHelper.getCommunityAreas(startDate, stopDate);
-dataHelper.getAll(startDate,stopDate,10);
+// dataHelper.getAll(startDate,stopDate,10);
+// dataHelper.getCoordinatedFromAddress("The Congress Plaza, Chicago");
+dataHelper.getCurrentPosition();
+// console.log(coordinates.lng);
