@@ -79,4 +79,41 @@ Router.post('/address', function(req, res, next){
 
 });
 
+Router.post('/currentAddress', function(req, res, next){
+  var lat = req.body.lat;
+  var lng = req.body.lng;
+  const startDate = '2016-01-01T00:00:00';
+  const stopDate = '2016-06-30T23:59:59';
+  addressPromise = crimeController.lookUpCrimeInZone(lat,lng, 200, startDate, stopDate);
+  addressPromise.then(function(result){
+    result.data.map(function(entry){
+      console.log(entry.primary_type);
+      type = entry.primary_type;
+      crimes.push(type);
+      // res.send(JSON.stringify(entry.primary_type));
+    });
+    var i;
+    for(i = 0;i < crimes.length; i++){
+      console.log("crime: " + crimes[i]);
+      // crimeController.getScore(crimes[i]);
+      score += crimeController.getScore(crimes[i]);
+    }
+    total = score/(crimes.length);
+    console.log(score);
+    console.log(total);
+    if(total < (average - threshold)){
+      res.send({"answer": 1});
+    }
+    else if(total > (average + threshold)){
+      res.send({"answer": -1});
+    }
+    else{
+      res.send({"answer": 0});
+    }
+
+  }).catch(function(err){
+    console.log(err);
+  // res.send(err);
+  });
+});
 module.exports = Router;
