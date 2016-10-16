@@ -9,12 +9,12 @@ safetyPrediction.prototype.getSafety = function(crimeScore, crimeAvg, latestCrim
 	var coefficient = 1/crimesPerDay;
 
 	predictionRateCrime = (1 - Math.pow(1-coefficient ,latestCrime/24)) * 100;
-	worstCaseScenario = (1 - Math.pow(1-coefficient ,(latestCrime+48)/24)) * 100;
 
-	console.log(crimesPerDay + " crimes per day");
-	console.log(latestCrime + " hours ago");
-	console.log(predictionRateCrime)
-	console.log(worstCaseScenario)
+	// console.log(crimesPerDay + " crimes per day");
+	// console.log(latestCrime + " hours ago");
+	// console.log(predictionRateCrime);
+
+	return (predictionRateCrime);
 
 	// if(result.length<=5){
 	// 		console.log('The area is safe')

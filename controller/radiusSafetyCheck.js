@@ -79,7 +79,8 @@ radiusSafetyCheck.prototype.getInfo = function(lat, long)  {
 
         var crimesPerDay = (response.data.length/183);
         // console.log(response.data.length + " | " + crimesPerDay);
-        sP.getSafety(total, avgCalc, latestCrime, crimesPerDay);
+        var crimePrediction = sP.getSafety(total, avgCalc, latestCrime, crimesPerDay);
+        // console.log(crimePrediction);
     }).catch(function (error) {
       console.log(error);
     });
