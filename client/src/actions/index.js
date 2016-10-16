@@ -2,6 +2,8 @@ import axios from 'axios';
 
 export const FETCH_GEOPOINTS = 'FETCH_GEOPOINTS';
 
+export const CREATE_ALERT = 'CREATE_ALERT';
+
 const CHICAGO_URL = "https://data.cityofchicago.org/resource/6zsd-86xi.json";
 
 export function fetchGeopoints() {

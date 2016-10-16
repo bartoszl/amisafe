@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import * as actions from '../actions';
+import Alert from 'react-s-alert';
 
 class SearchBar extends Component {
   constructor(props) {
@@ -44,12 +45,22 @@ class SearchBar extends Component {
   getSafetyIndicator(e) {
     e.preventDefault();
     let address = this.state.term;
-
+  
     axios.post('/api/address', {
       address: address
     })
     .then(function(response){
       console.log(response);
+      let indicator = response.data.answer;
+
+      if(indicator == -1) {
+        alert("Damn! Your neighbourhood is dangerous.");
+      } else if(indicator == 0) {
+        alert("Don't worry! Your neighbourhood is average.");
+      } else {
+        alert("Your neighbourhood is super safe!");
+      }
+      
     })
     .catch(function(error){
       console.log(error);
@@ -100,7 +111,7 @@ class SearchBar extends Component {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {alert: state.alert};
 }
 
 export default connect(mapStateToProps, actions)(SearchBar);

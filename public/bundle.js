@@ -79,7 +79,7 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
-	var _statistics = __webpack_require__(343);
+	var _statistics = __webpack_require__(350);
 
 	var _statistics2 = _interopRequireDefault(_statistics);
 
@@ -29453,7 +29453,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.FETCH_GEOPOINTS = undefined;
+	exports.CREATE_ALERT = exports.FETCH_GEOPOINTS = undefined;
 	exports.fetchGeopoints = fetchGeopoints;
 
 	var _axios = __webpack_require__(268);
@@ -29463,6 +29463,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var FETCH_GEOPOINTS = exports.FETCH_GEOPOINTS = 'FETCH_GEOPOINTS';
+
+	var CREATE_ALERT = exports.CREATE_ALERT = 'CREATE_ALERT';
 
 	var CHICAGO_URL = "https://data.cityofchicago.org/resource/6zsd-86xi.json";
 
@@ -30981,11 +30983,11 @@
 
 	var _search_bar2 = _interopRequireDefault(_search_bar);
 
-	var _google_map = __webpack_require__(295);
+	var _google_map = __webpack_require__(302);
 
 	var _google_map2 = _interopRequireDefault(_google_map);
 
-	var _navbar = __webpack_require__(342);
+	var _navbar = __webpack_require__(349);
 
 	var _navbar2 = _interopRequireDefault(_navbar);
 
@@ -31049,6 +31051,10 @@
 	var _actions = __webpack_require__(267);
 
 	var actions = _interopRequireWildcard(_actions);
+
+	var _reactSAlert = __webpack_require__(295);
+
+	var _reactSAlert2 = _interopRequireDefault(_reactSAlert);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -31116,6 +31122,15 @@
 	        address: address
 	      }).then(function (response) {
 	        console.log(response);
+	        var indicator = response.data.answer;
+
+	        if (indicator == -1) {
+	          alert("Damn! Your neighbourhood is dangerous.");
+	        } else if (indicator == 0) {
+	          alert("Don't worry! Your neighbourhood is average.");
+	        } else {
+	          alert("Your neighbourhood is super safe!");
+	        }
 	      }).catch(function (error) {
 	        console.log(error);
 	      });
@@ -31178,13 +31193,1005 @@
 	}(_react.Component);
 
 	function mapStateToProps(state) {
-	  return {};
+	  return { alert: state.alert };
 	}
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, actions)(SearchBar);
 
 /***/ },
 /* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(296);
+
+/***/ },
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(297), __webpack_require__(299), __webpack_require__(298), __webpack_require__(301)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    } else if (typeof exports !== "undefined") {
+	        factory(exports, require('react'), require('./SAlertContent'), require('./s-alert-parts/s-alert-store'), require('./s-alert-parts/s-alert-tools'), require('./s-alert-parts/s-alert-data-prep'));
+	    } else {
+	        var mod = {
+	            exports: {}
+	        };
+	        factory(mod.exports, global.react, global.SAlertContent, global.sAlertStore, global.sAlertTools, global.sAlertDataPrep);
+	        global.SAlert = mod.exports;
+	    }
+	})(this, function (exports, _react, _SAlertContent, _sAlertStore, _sAlertTools, _sAlertDataPrep) {
+	    'use strict';
+
+	    Object.defineProperty(exports, "__esModule", {
+	        value: true
+	    });
+
+	    var _react2 = _interopRequireDefault(_react);
+
+	    var _SAlertContent2 = _interopRequireDefault(_SAlertContent);
+
+	    var _sAlertStore2 = _interopRequireDefault(_sAlertStore);
+
+	    var _sAlertTools2 = _interopRequireDefault(_sAlertTools);
+
+	    var _sAlertDataPrep2 = _interopRequireDefault(_sAlertDataPrep);
+
+	    function _interopRequireDefault(obj) {
+	        return obj && obj.__esModule ? obj : {
+	            default: obj
+	        };
+	    }
+
+	    function _classCallCheck(instance, Constructor) {
+	        if (!(instance instanceof Constructor)) {
+	            throw new TypeError("Cannot call a class as a function");
+	        }
+	    }
+
+	    var _createClass = function () {
+	        function defineProperties(target, props) {
+	            for (var i = 0; i < props.length; i++) {
+	                var descriptor = props[i];
+	                descriptor.enumerable = descriptor.enumerable || false;
+	                descriptor.configurable = true;
+	                if ("value" in descriptor) descriptor.writable = true;
+	                Object.defineProperty(target, descriptor.key, descriptor);
+	            }
+	        }
+
+	        return function (Constructor, protoProps, staticProps) {
+	            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	            if (staticProps) defineProperties(Constructor, staticProps);
+	            return Constructor;
+	        };
+	    }();
+
+	    function _possibleConstructorReturn(self, call) {
+	        if (!self) {
+	            throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	        }
+
+	        return call && (typeof call === "object" || typeof call === "function") ? call : self;
+	    }
+
+	    function _inherits(subClass, superClass) {
+	        if (typeof superClass !== "function" && superClass !== null) {
+	            throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+	        }
+
+	        subClass.prototype = Object.create(superClass && superClass.prototype, {
+	            constructor: {
+	                value: subClass,
+	                enumerable: false,
+	                writable: true,
+	                configurable: true
+	            }
+	        });
+	        if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	    }
+
+	    var insertFunc = function insertFunc(msg, data, condition) {
+	        var id = _sAlertTools2.default.randomId();
+	        _sAlertStore2.default.dispatch({
+	            type: 'INSERT',
+	            data: Object.assign({}, data, {
+	                id: id,
+	                condition: condition,
+	                message: msg
+	            })
+	        });
+	        return id;
+	    };
+
+	    var SAlert = function (_React$Component) {
+	        _inherits(SAlert, _React$Component);
+
+	        function SAlert(props) {
+	            _classCallCheck(this, SAlert);
+
+	            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SAlert).call(this, props));
+
+	            _this.state = {
+	                dataRight: [],
+	                dataLeft: [],
+	                dataTop: [],
+	                dataBottom: []
+	            };
+	            return _this;
+	        }
+
+	        _createClass(SAlert, [{
+	            key: 'componentDidMount',
+	            value: function componentDidMount() {
+	                var _this2 = this;
+
+	                var storeStateLeft = void 0;
+	                var storeStateRight = void 0;
+	                var storeStateTop = void 0;
+	                var storeStateBottom = void 0;
+
+	                var addToStoreRight = function addToStoreRight() {
+	                    var length = void 0;
+	                    storeStateRight = (0, _sAlertDataPrep2.default)('right') || [];
+	                    length = storeStateRight.length;
+	                    if (_this2.props.stack && _this2.props.stack.limit && length > _this2.props.stack.limit) {
+	                        var id = storeStateRight[0].id;
+	                        _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: id } });
+	                        storeStateRight = (0, _sAlertDataPrep2.default)('right') || [];
+	                    }
+	                    _this2.setState({ dataRight: storeStateRight });
+	                };
+	                this.unsubStoreRight = _sAlertStore2.default.subscribe(addToStoreRight);
+
+	                var addToStoreLeft = function addToStoreLeft() {
+	                    var length = void 0;
+	                    storeStateLeft = (0, _sAlertDataPrep2.default)('left') || [];
+	                    length = storeStateLeft.length;
+	                    if (_this2.props.stack && _this2.props.stack.limit && length > _this2.props.stack.limit) {
+	                        var id = storeStateLeft[0].id;
+	                        _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: id } });
+	                        storeStateLeft = (0, _sAlertDataPrep2.default)('left') || [];
+	                    }
+	                    _this2.setState({ dataLeft: storeStateLeft });
+	                };
+	                this.unsubStoreLeft = _sAlertStore2.default.subscribe(addToStoreLeft);
+
+	                var addToStoreTop = function addToStoreTop() {
+	                    var length = void 0;
+	                    storeStateTop = (0, _sAlertDataPrep2.default)('full-top') || [];
+	                    length = storeStateTop.length;
+	                    if (_this2.props.stack && _this2.props.stack.limit && length > _this2.props.stack.limit) {
+	                        var id = storeStateTop[0].id;
+	                        _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: id } });
+	                        storeStateTop = (0, _sAlertDataPrep2.default)('full-top') || [];
+	                    }
+	                    _this2.setState({ dataTop: storeStateTop });
+	                };
+	                this.unsubStoreTop = _sAlertStore2.default.subscribe(addToStoreTop);
+
+	                var addToStoreBottom = function addToStoreBottom() {
+	                    var length = void 0;
+	                    storeStateBottom = (0, _sAlertDataPrep2.default)('full-bottom') || [];
+	                    length = storeStateBottom.length;
+	                    if (_this2.props.stack && _this2.props.stack.limit && length > _this2.props.stack.limit) {
+	                        var id = storeStateBottom[0].id;
+	                        _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: id } });
+	                        storeStateBottom = (0, _sAlertDataPrep2.default)('full-bottom') || [];
+	                    }
+	                    _this2.setState({ dataBottom: storeStateBottom });
+	                };
+	                this.unsubStoreBottom = _sAlertStore2.default.subscribe(addToStoreBottom);
+
+	                // set up global config from global SAlert props
+	                // only stuff needed for getAlertData
+	                var globalConfig = {
+	                    contentTemplate: this.props.contentTemplate,
+	                    offset: this.props.offset,
+	                    message: this.props.message,
+	                    stack: this.props.stack,
+	                    html: this.props.html,
+	                    customFields: this.props.customFields,
+	                    position: this.props.position || 'top-right'
+	                };
+	                _sAlertTools2.default.setGlobalConfig(globalConfig);
+	            }
+	        }, {
+	            key: 'componentWillUnmount',
+	            value: function componentWillUnmount() {
+	                this.unsubStoreTop();
+	                this.unsubStoreBottom();
+	                this.unsubStoreLeft();
+	                this.unsubStoreRight();
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                var _this3 = this;
+
+	                var mapFunc = function mapFunc(alert, index) {
+	                    var customKey = 'alert-key-' + alert.id + '-' + alert.position;
+	                    var id = alert.id;
+	                    var condition = _sAlertTools2.default.returnFirstDefined(alert.condition, 'info');
+	                    var message = _sAlertTools2.default.returnFirstDefined(alert.message, _this3.props.message, '');
+	                    var position = _sAlertTools2.default.returnFirstDefined(alert.position, _this3.props.position, 'top-right');
+	                    var offset = _sAlertTools2.default.returnFirstDefined(alert.offset, _this3.props.offset, 0);
+	                    var effect = _sAlertTools2.default.returnFirstDefined(alert.effect, _this3.props.effect);
+	                    var boxPosition = alert.boxPosition;
+	                    var beep = _sAlertTools2.default.returnFirstDefined(alert.beep, _this3.props.beep, false);
+	                    var timeout = _sAlertTools2.default.returnFirstDefined(alert.timeout, _this3.props.timeout, 5000);
+	                    var html = _sAlertTools2.default.returnFirstDefined(alert.html, _this3.props.html);
+	                    var onClose = _sAlertTools2.default.returnFirstDefined(alert.onClose, _this3.props.onClose);
+	                    var onShow = _sAlertTools2.default.returnFirstDefined(alert.onShow, _this3.props.onShow);
+	                    var customFields = _sAlertTools2.default.returnFirstDefined(alert.customFields, _this3.props.customFields);
+	                    var contentTemplate = _this3.props.contentTemplate;
+	                    return _react2.default.createElement(_SAlertContent2.default, {
+	                        key: customKey,
+	                        id: id,
+	                        customFields: customFields,
+	                        condition: condition,
+	                        message: message,
+	                        position: position,
+	                        effect: effect,
+	                        boxPosition: boxPosition,
+	                        beep: beep,
+	                        timeout: timeout,
+	                        html: html,
+	                        onClose: onClose,
+	                        onShow: onShow,
+	                        contentTemplate: contentTemplate });
+	                };
+	                var sAlertElemsRight = this.state.dataRight.map(mapFunc);
+	                var sAlertElemsLeft = this.state.dataLeft.map(mapFunc);
+	                var sAlertElemsTop = this.state.dataTop.map(mapFunc);
+	                var sAlertElemsBottom = this.state.dataBottom.map(mapFunc);
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 's-alert-wrapper' },
+	                    sAlertElemsRight,
+	                    sAlertElemsLeft,
+	                    sAlertElemsTop,
+	                    sAlertElemsBottom
+	                );
+	            }
+	        }], [{
+	            key: 'info',
+	            value: function info(msg, data) {
+	                return insertFunc(msg, data, 'info');
+	            }
+	        }, {
+	            key: 'error',
+	            value: function error(msg, data) {
+	                return insertFunc(msg, data, 'error');
+	            }
+	        }, {
+	            key: 'warning',
+	            value: function warning(msg, data) {
+	                return insertFunc(msg, data, 'warning');
+	            }
+	        }, {
+	            key: 'success',
+	            value: function success(msg, data) {
+	                return insertFunc(msg, data, 'success');
+	            }
+	        }, {
+	            key: 'close',
+	            value: function close(id) {
+	                _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: id } });
+	            }
+	        }, {
+	            key: 'closeAll',
+	            value: function closeAll() {
+	                _sAlertStore2.default.dispatch({ type: 'REMOVEALL' });
+	            }
+	        }]);
+
+	        return SAlert;
+	    }(_react2.default.Component);
+
+	    SAlert.propTypes = {
+	        message: _react2.default.PropTypes.string,
+	        position: _react2.default.PropTypes.string,
+	        offset: _react2.default.PropTypes.number,
+	        stack: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.bool, _react2.default.PropTypes.object]),
+	        effect: _react2.default.PropTypes.string,
+	        beep: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.object, _react2.default.PropTypes.bool]),
+	        timeout: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.oneOf(['none']), _react2.default.PropTypes.number]),
+	        html: _react2.default.PropTypes.bool,
+	        onClose: _react2.default.PropTypes.func,
+	        onShow: _react2.default.PropTypes.func,
+	        customFields: _react2.default.PropTypes.object,
+	        contentTemplate: _react2.default.PropTypes.func
+	    };
+
+	    exports.default = SAlert;
+	});
+
+/***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(35), __webpack_require__(298), __webpack_require__(299), __webpack_require__(300)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    } else if (typeof exports !== "undefined") {
+	        factory(exports, require('react'), require('react-dom'), require('./s-alert-parts/s-alert-tools'), require('./s-alert-parts/s-alert-store'), require('./SAlertContentTmpl'));
+	    } else {
+	        var mod = {
+	            exports: {}
+	        };
+	        factory(mod.exports, global.react, global.reactDom, global.sAlertTools, global.sAlertStore, global.SAlertContentTmpl);
+	        global.SAlertContent = mod.exports;
+	    }
+	})(this, function (exports, _react, _reactDom, _sAlertTools, _sAlertStore, _SAlertContentTmpl) {
+	    'use strict';
+
+	    Object.defineProperty(exports, "__esModule", {
+	        value: true
+	    });
+
+	    var _react2 = _interopRequireDefault(_react);
+
+	    var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	    var _sAlertTools2 = _interopRequireDefault(_sAlertTools);
+
+	    var _sAlertStore2 = _interopRequireDefault(_sAlertStore);
+
+	    var _SAlertContentTmpl2 = _interopRequireDefault(_SAlertContentTmpl);
+
+	    function _interopRequireDefault(obj) {
+	        return obj && obj.__esModule ? obj : {
+	            default: obj
+	        };
+	    }
+
+	    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+	        return typeof obj;
+	    } : function (obj) {
+	        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+	    };
+
+	    function _classCallCheck(instance, Constructor) {
+	        if (!(instance instanceof Constructor)) {
+	            throw new TypeError("Cannot call a class as a function");
+	        }
+	    }
+
+	    var _createClass = function () {
+	        function defineProperties(target, props) {
+	            for (var i = 0; i < props.length; i++) {
+	                var descriptor = props[i];
+	                descriptor.enumerable = descriptor.enumerable || false;
+	                descriptor.configurable = true;
+	                if ("value" in descriptor) descriptor.writable = true;
+	                Object.defineProperty(target, descriptor.key, descriptor);
+	            }
+	        }
+
+	        return function (Constructor, protoProps, staticProps) {
+	            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	            if (staticProps) defineProperties(Constructor, staticProps);
+	            return Constructor;
+	        };
+	    }();
+
+	    function _possibleConstructorReturn(self, call) {
+	        if (!self) {
+	            throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	        }
+
+	        return call && (typeof call === "object" || typeof call === "function") ? call : self;
+	    }
+
+	    function _inherits(subClass, superClass) {
+	        if (typeof superClass !== "function" && superClass !== null) {
+	            throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+	        }
+
+	        subClass.prototype = Object.create(superClass && superClass.prototype, {
+	            constructor: {
+	                value: subClass,
+	                enumerable: false,
+	                writable: true,
+	                configurable: true
+	            }
+	        });
+	        if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	    }
+
+	    var SAlertContent = function (_React$Component) {
+	        _inherits(SAlertContent, _React$Component);
+
+	        function SAlertContent(props) {
+	            _classCallCheck(this, SAlertContent);
+
+	            return _possibleConstructorReturn(this, Object.getPrototypeOf(SAlertContent).call(this, props));
+	        }
+
+	        _createClass(SAlertContent, [{
+	            key: 'handleCloseAlert',
+	            value: function handleCloseAlert() {
+	                var closingTimeout = void 0;
+	                var alertId = this.props.id;
+	                var currentAlertElem = _reactDom2.default.findDOMNode(this);
+	                var animationClose = function animationClose() {
+	                    currentAlertElem.style.display = 'none';
+	                    _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: alertId } });
+	                    clearTimeout(closingTimeout);
+	                };
+	                if (document.hidden || document.webkitHidden || !currentAlertElem.classList.contains('s-alert-is-effect')) {
+	                    _sAlertStore2.default.dispatch({ type: 'REMOVE', data: { id: alertId } });
+	                } else {
+	                    currentAlertElem.classList.remove('s-alert-show');
+	                    closingTimeout = setTimeout(function () {
+	                        currentAlertElem.classList.add('s-alert-hide');
+	                    }, 100);
+	                    currentAlertElem.removeEventListener('webkitAnimationEnd', animationClose, false);
+	                    currentAlertElem.removeEventListener('animationend', animationClose, false);
+	                    currentAlertElem.addEventListener('webkitAnimationEnd', animationClose, false);
+	                    currentAlertElem.addEventListener('animationend', animationClose, false);
+	                }
+	                // stop audio when closing
+	                this.alertAudio && this.alertAudio.load();
+	            }
+	        }, {
+	            key: 'componentWillMount',
+	            value: function componentWillMount() {
+	                var beep = this.props.beep;
+	                var condition = this.props.condition;
+	                if (beep && typeof beep === 'string') {
+	                    this.alertAudio = new Audio(beep);
+	                    this.alertAudio.load();
+	                    this.alertAudio.play();
+	                }
+	                if (beep && (typeof beep === 'undefined' ? 'undefined' : _typeof(beep)) === 'object' && condition === 'info') {
+	                    this.alertAudio = new Audio(beep.info);
+	                    this.alertAudio.load();
+	                    this.alertAudio.play();
+	                }
+	                if (beep && (typeof beep === 'undefined' ? 'undefined' : _typeof(beep)) === 'object' && condition === 'error') {
+	                    this.alertAudio = new Audio(beep.error);
+	                    this.alertAudio.load();
+	                    this.alertAudio.play();
+	                }
+	                if (beep && (typeof beep === 'undefined' ? 'undefined' : _typeof(beep)) === 'object' && condition === 'success') {
+	                    this.alertAudio = new Audio(beep.success);
+	                    this.alertAudio.load();
+	                    this.alertAudio.play();
+	                }
+	                if (beep && (typeof beep === 'undefined' ? 'undefined' : _typeof(beep)) === 'object' && condition === 'warning') {
+	                    this.alertAudio = new Audio(beep.warning);
+	                    this.alertAudio.load();
+	                    this.alertAudio.play();
+	                }
+	            }
+	        }, {
+	            key: 'componentDidMount',
+	            value: function componentDidMount() {
+	                var _this2 = this;
+
+	                if (typeof this.props.timeout === 'number') {
+	                    this.closeTimer = setTimeout(function () {
+	                        _this2.handleCloseAlert();
+	                    }, this.props.timeout);
+	                }
+	                if (this.props.onShow) {
+	                    this.props.onShow();
+	                }
+	            }
+	        }, {
+	            key: 'componentWillUnmount',
+	            value: function componentWillUnmount() {
+	                if (this.closeTimer) {
+	                    clearTimeout(this.closeTimer);
+	                }
+	                if (this.props.onClose) {
+	                    this.props.onClose();
+	                }
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                var classNames = 's-alert-box s-alert-' + this.props.condition + ' s-alert-' + this.props.position + ' ' + (this.props.effect ? 's-alert-is-effect s-alert-effect-' + this.props.effect : '') + ' s-alert-show';
+	                var message = this.props.html ? _react2.default.createElement('span', { dangerouslySetInnerHTML: { __html: this.props.message } }) : this.props.message;
+	                var styles = this.props.boxPosition ? _sAlertTools2.default.styleToObj(this.props.boxPosition) : {};
+	                var id = this.props.id;
+	                var handleClose = this.handleCloseAlert.bind(this);
+	                var contentTemplate = this.props.contentTemplate || _SAlertContentTmpl2.default;
+	                var customFields = this.props.customFields || {};
+
+	                return _react2.default.createElement(contentTemplate, { classNames: classNames, id: id, styles: styles, message: message, handleClose: handleClose, customFields: customFields });
+	            }
+	        }]);
+
+	        return SAlertContent;
+	    }(_react2.default.Component);
+
+	    SAlertContent.propTypes = {
+	        condition: _react2.default.PropTypes.string.isRequired,
+	        message: _react2.default.PropTypes.string.isRequired,
+	        position: _react2.default.PropTypes.string.isRequired,
+	        boxPosition: _react2.default.PropTypes.string,
+	        id: _react2.default.PropTypes.string.isRequired,
+	        effect: _react2.default.PropTypes.string,
+	        beep: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.object, _react2.default.PropTypes.bool]),
+	        timeout: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.oneOf(['none']), _react2.default.PropTypes.number]),
+	        html: _react2.default.PropTypes.bool,
+	        onClose: _react2.default.PropTypes.func,
+	        onShow: _react2.default.PropTypes.func,
+	        customFields: _react2.default.PropTypes.object,
+	        contentTemplate: _react2.default.PropTypes.func
+	    };
+
+	    exports.default = SAlertContent;
+	});
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    } else if (typeof exports !== "undefined") {
+	        factory(exports);
+	    } else {
+	        var mod = {
+	            exports: {}
+	        };
+	        factory(mod.exports);
+	        global.sAlertTools = mod.exports;
+	    }
+	})(this, function (exports) {
+	    'use strict';
+
+	    Object.defineProperty(exports, "__esModule", {
+	        value: true
+	    });
+
+	    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+	        return typeof obj;
+	    } : function (obj) {
+	        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+	    };
+
+	    var actualGlobalConfig = void 0;
+
+	    var sAlertTools = {
+	        randomId: function randomId() {
+	            return Math.random().toString(36).split('.')[1];
+	        },
+	        returnFirstDefined: function returnFirstDefined() {
+	            var value = void 0;
+	            var i = void 0;
+
+	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	                args[_key] = arguments[_key];
+	            }
+
+	            for (i = 0; i < args.length; i++) {
+	                if (typeof args[i] !== 'undefined') {
+	                    value = args[i];
+	                    break;
+	                }
+	            }
+	            return value;
+	        },
+	        styleToObj: function styleToObj(input) {
+	            var result = {},
+	                i = void 0,
+	                entry = void 0,
+	                attributes = input && input.split(';').filter(Boolean);
+
+	            for (i = 0; i < attributes.length; i++) {
+	                entry = attributes[i].split(':');
+	                result[entry.splice(0, 1)[0].trim()] = entry.join(':').trim();
+	            }
+	            return result;
+	        },
+	        setGlobalConfig: function setGlobalConfig(config) {
+	            if ((typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object') {
+	                actualGlobalConfig = config;
+	            }
+	        },
+	        getGlobalConfig: function getGlobalConfig() {
+	            return actualGlobalConfig;
+	        }
+	    };
+
+	    exports.default = sAlertTools;
+	});
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    } else if (typeof exports !== "undefined") {
+	        factory(exports);
+	    } else {
+	        var mod = {
+	            exports: {}
+	        };
+	        factory(mod.exports);
+	        global.sAlertStore = mod.exports;
+	    }
+	})(this, function (exports) {
+	    'use strict';
+
+	    Object.defineProperty(exports, "__esModule", {
+	        value: true
+	    });
+
+	    function _toConsumableArray(arr) {
+	        if (Array.isArray(arr)) {
+	            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+	                arr2[i] = arr[i];
+	            }
+
+	            return arr2;
+	        } else {
+	            return Array.from(arr);
+	        }
+	    }
+
+	    // custom simple store based on a awesome Redux library https://github.com/rackt/redux
+
+	    var createSAlertStore = function createSAlertStore(reducer) {
+	        var state = void 0;
+	        var listeners = [];
+	        var getState = function getState() {
+	            return state;
+	        };
+	        var dispatch = function dispatch(action) {
+	            state = reducer(state, action);
+	            listeners.forEach(function (listener) {
+	                return listener();
+	            });
+	        };
+	        var subscribe = function subscribe(listener) {
+	            listeners.push(listener);
+	            return function () {
+	                listeners = listeners.filter(function (l) {
+	                    return l !== listener;
+	                });
+	            };
+	        };
+	        dispatch({});
+	        return {
+	            getState: getState, dispatch: dispatch, subscribe: subscribe
+	        };
+	    };
+
+	    var insert = function insert(state, action) {
+	        return [].concat(_toConsumableArray(state), [action.data]);
+	    };
+
+	    var remove = function remove(state, action) {
+	        var elemToRemoveArray = state.slice().filter(function (item) {
+	            return item.id === action.data.id;
+	        });
+	        if (Array.isArray(elemToRemoveArray)) {
+	            var elemToRemoveIndex = state.indexOf(elemToRemoveArray[0]);
+	            return [].concat(_toConsumableArray(state.slice(0, elemToRemoveIndex)), _toConsumableArray(state.slice(elemToRemoveIndex + 1)));
+	        }
+	        return state;
+	    };
+
+	    var alertsReducer = function alertsReducer() {
+	        var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	        var action = arguments[1];
+
+	        switch (action.type) {
+	            case 'INSERT':
+	                return insert(state, action);
+	            case 'REMOVE':
+	                return remove(state, action);
+	            case 'REMOVEALL':
+	                return [];
+	            default:
+	                return state;
+	        }
+	    };
+
+	    var sAlertStore = createSAlertStore(alertsReducer);
+
+	    exports.default = sAlertStore;
+	});
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    } else if (typeof exports !== "undefined") {
+	        factory(exports, require('react'));
+	    } else {
+	        var mod = {
+	            exports: {}
+	        };
+	        factory(mod.exports, global.react);
+	        global.SAlertContentTmpl = mod.exports;
+	    }
+	})(this, function (exports, _react) {
+	    'use strict';
+
+	    Object.defineProperty(exports, "__esModule", {
+	        value: true
+	    });
+
+	    var _react2 = _interopRequireDefault(_react);
+
+	    function _interopRequireDefault(obj) {
+	        return obj && obj.__esModule ? obj : {
+	            default: obj
+	        };
+	    }
+
+	    function _classCallCheck(instance, Constructor) {
+	        if (!(instance instanceof Constructor)) {
+	            throw new TypeError("Cannot call a class as a function");
+	        }
+	    }
+
+	    var _createClass = function () {
+	        function defineProperties(target, props) {
+	            for (var i = 0; i < props.length; i++) {
+	                var descriptor = props[i];
+	                descriptor.enumerable = descriptor.enumerable || false;
+	                descriptor.configurable = true;
+	                if ("value" in descriptor) descriptor.writable = true;
+	                Object.defineProperty(target, descriptor.key, descriptor);
+	            }
+	        }
+
+	        return function (Constructor, protoProps, staticProps) {
+	            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	            if (staticProps) defineProperties(Constructor, staticProps);
+	            return Constructor;
+	        };
+	    }();
+
+	    function _possibleConstructorReturn(self, call) {
+	        if (!self) {
+	            throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	        }
+
+	        return call && (typeof call === "object" || typeof call === "function") ? call : self;
+	    }
+
+	    function _inherits(subClass, superClass) {
+	        if (typeof superClass !== "function" && superClass !== null) {
+	            throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+	        }
+
+	        subClass.prototype = Object.create(superClass && superClass.prototype, {
+	            constructor: {
+	                value: subClass,
+	                enumerable: false,
+	                writable: true,
+	                configurable: true
+	            }
+	        });
+	        if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	    }
+
+	    var SAlertContentTmpl = function (_React$Component) {
+	        _inherits(SAlertContentTmpl, _React$Component);
+
+	        function SAlertContentTmpl(props) {
+	            _classCallCheck(this, SAlertContentTmpl);
+
+	            return _possibleConstructorReturn(this, Object.getPrototypeOf(SAlertContentTmpl).call(this, props));
+	        }
+
+	        _createClass(SAlertContentTmpl, [{
+	            key: 'render',
+	            value: function render() {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: this.props.classNames, id: this.props.id, style: this.props.styles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 's-alert-box-inner' },
+	                        this.props.message
+	                    ),
+	                    _react2.default.createElement('span', { className: 's-alert-close', onClick: this.props.handleClose })
+	                );
+	            }
+	        }]);
+
+	        return SAlertContentTmpl;
+	    }(_react2.default.Component);
+
+	    SAlertContentTmpl.propTypes = {
+	        id: _react2.default.PropTypes.string.isRequired,
+	        classNames: _react2.default.PropTypes.string.isRequired,
+	        styles: _react2.default.PropTypes.object.isRequired,
+	        message: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.object]).isRequired,
+	        handleClose: _react2.default.PropTypes.func.isRequired,
+	        customFields: _react2.default.PropTypes.object
+	    };
+
+	    exports.default = SAlertContentTmpl;
+	});
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2), __webpack_require__(35), __webpack_require__(297), __webpack_require__(299), __webpack_require__(298)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    } else if (typeof exports !== "undefined") {
+	        factory(exports, require('react'), require('react-dom'), require('../SAlertContent'), require('./s-alert-store'), require('./s-alert-tools'));
+	    } else {
+	        var mod = {
+	            exports: {}
+	        };
+	        factory(mod.exports, global.react, global.reactDom, global.SAlertContent, global.sAlertStore, global.sAlertTools);
+	        global.sAlertDataPrep = mod.exports;
+	    }
+	})(this, function (exports, _react, _reactDom, _SAlertContent, _sAlertStore, _sAlertTools) {
+	    'use strict';
+
+	    Object.defineProperty(exports, "__esModule", {
+	        value: true
+	    });
+
+	    var _react2 = _interopRequireDefault(_react);
+
+	    var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	    var _SAlertContent2 = _interopRequireDefault(_SAlertContent);
+
+	    var _sAlertStore2 = _interopRequireDefault(_sAlertStore);
+
+	    var _sAlertTools2 = _interopRequireDefault(_sAlertTools);
+
+	    function _interopRequireDefault(obj) {
+	        return obj && obj.__esModule ? obj : {
+	            default: obj
+	        };
+	    }
+
+	    var getAlertData = function getAlertData(sAlertPosition) {
+	        var positionTop = 0;
+	        var positionBottom = 0;
+	        var padding = 0;
+	        var alerts = {};
+	        var style = void 0;
+	        var docElement = void 0;
+	        var sAlertBoxHeight = void 0;
+	        var positionTypeTop = void 0;
+	        var positionTypeBottom = void 0;
+	        var checkFirst = function checkFirst(type, objId) {
+	            var collectionOfType = sAlertCollection.filter(function (obj) {
+	                return obj.position === type || sAlertGlobalConfig.position === type;
+	            });
+	            return collectionOfType && collectionOfType[0].id === objId;
+	        };
+	        var positionFunc = function positionFunc(position, positionType, alert, docElement, sAlertBoxHeight, reactComponent) {
+	            padding = aStack.spacing || parseInt(getComputedStyle(_reactDom2.default.findDOMNode(reactComponent))[positionType]);
+	            if (checkFirst(aPosition, alert.id) && aOffset) {
+	                position = 0;
+	                position = position + parseInt(aOffset);
+	            }
+	            if (checkFirst(aPosition, alert.id) && aStack.spacing) {
+	                position = position;
+	            } else {
+	                position = position + parseInt(padding);
+	            }
+	            style = positionType + ': ' + position + 'px;';
+	            position = position + sAlertBoxHeight;
+	            return position;
+	        };
+
+	        var sAlertGlobalConfig = _sAlertTools2.default.getGlobalConfig();
+	        var aStack = void 0;
+	        var aContentTemplate = void 0;
+	        var aOffset = void 0;
+	        var aMessage = void 0;
+	        var aHtml = void 0;
+	        var aCustomFields = void 0;
+	        var aPosition = void 0;
+
+	        var query = {};
+	        if (sAlertPosition === 'left') {
+	            query = function query(item) {
+	                return item.position === 'top-left' || item.position === 'bottom-left' || !item.position && (sAlertGlobalConfig.position === 'top-left' || sAlertGlobalConfig.position === 'bottom-left');
+	            };
+	        }
+	        if (sAlertPosition === 'right') {
+	            query = function query(item) {
+	                return item.position === 'top-right' || item.position === 'bottom-right' || !item.position && (sAlertGlobalConfig.position === 'top-right' || sAlertGlobalConfig.position === 'bottom-right');
+	            };
+	        }
+	        if (sAlertPosition === 'full-top') {
+	            query = function query(item) {
+	                return item.position === 'top' || !item.position && sAlertGlobalConfig.position === 'top';
+	            };
+	        }
+	        if (sAlertPosition === 'full-bottom') {
+	            query = function query(item) {
+	                return item.position === 'bottom' || !item.position && sAlertGlobalConfig.position === 'bottom';
+	            };
+	        }
+
+	        var currentState = _sAlertStore2.default.getState();
+	        var sAlertCollection = currentState.slice().filter(query);
+
+	        return sAlertCollection.map(function (alert) {
+	            aStack = sAlertGlobalConfig.stack;
+	            aContentTemplate = sAlertGlobalConfig.contentTemplate;
+	            aOffset = _sAlertTools2.default.returnFirstDefined(alert.offset, sAlertGlobalConfig.offset);
+	            aMessage = _sAlertTools2.default.returnFirstDefined(alert.message, sAlertGlobalConfig.message);
+	            aHtml = _sAlertTools2.default.returnFirstDefined(alert.html, sAlertGlobalConfig.html);
+	            aCustomFields = _sAlertTools2.default.returnFirstDefined(alert.customFields, sAlertGlobalConfig.customFields);
+	            aPosition = _sAlertTools2.default.returnFirstDefined(alert.position, sAlertGlobalConfig.position);
+	            positionTypeTop = aPosition && /top/g.test(aPosition);
+	            positionTypeBottom = aPosition && /bottom/g.test(aPosition);
+	            if (aStack) {
+	                // checking alert box height - needed to calculate position
+	                docElement = document.createElement('div');
+	                docElement.classList.add('s-alert-box-height');
+
+	                // mock element, needed for positions calculations
+	                var reactElement = _react2.default.createElement(_SAlertContent2.default, {
+	                    key: _sAlertTools2.default.randomId(),
+	                    id: _sAlertTools2.default.randomId(),
+	                    condition: alert.condition,
+	                    message: aMessage,
+	                    position: aPosition,
+	                    effect: alert.effect,
+	                    boxPosition: alert.boxPosition,
+	                    beep: false,
+	                    timeout: 'none',
+	                    html: aHtml,
+	                    contentTemplate: aContentTemplate,
+	                    customFields: aCustomFields
+	                });
+	                var reactComponent = _reactDom2.default.render(reactElement, docElement);
+
+	                document.body.appendChild(docElement);
+	                sAlertBoxHeight = parseInt(getComputedStyle(_reactDom2.default.findDOMNode(reactComponent))['height']);
+	                if (positionTypeTop) {
+	                    positionTop = positionFunc(positionTop, 'top', alert, docElement, sAlertBoxHeight, reactComponent);
+	                }
+	                if (positionTypeBottom) {
+	                    positionBottom = positionFunc(positionBottom, 'bottom', alert, docElement, sAlertBoxHeight, reactComponent);
+	                }
+	                var sAlertComputedStyle = getComputedStyle(_reactDom2.default.findDOMNode(reactComponent));
+	                if (sAlertPosition === 'left') {
+	                    style = style + 'left: ' + (aStack.spacing || parseInt(sAlertComputedStyle.left)) + 'px;';
+	                }
+	                if (sAlertPosition === 'right') {
+	                    style = style + 'right: ' + (aStack.spacing || parseInt(sAlertComputedStyle.right)) + 'px;';
+	                }
+	                alerts = Object.assign({}, alert, { boxPosition: style });
+	                _reactDom2.default.unmountComponentAtNode(docElement);
+	                docElement.parentNode.removeChild(docElement);
+	            } else if (aOffset && positionTypeTop) {
+	                alerts = Object.assign({}, alert, { boxPosition: 'top: ' + parseInt(aOffset) + 'px;' });
+	            } else if (aOffset && positionTypeBottom) {
+	                alerts = Object.assign({}, alert, { boxPosition: 'bottom: ' + parseInt(aOffset) + 'px;' });
+	            } else {
+	                alerts = alert;
+	            }
+	            return alerts;
+	        });
+	    };
+
+	    exports.default = getAlertData;
+	});
+
+/***/ },
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31199,7 +32206,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactGoogleMaps = __webpack_require__(296);
+	var _reactGoogleMaps = __webpack_require__(303);
 
 	var _reactRedux = __webpack_require__(251);
 
@@ -31281,7 +32288,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, actions)(ClusterGoogleMap);
 
 /***/ },
-/* 296 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31292,60 +32299,60 @@
 
 	function _interopRequire(obj) { return obj && obj.__esModule ? obj["default"] : obj; }
 
-	var _GoogleMapLoader = __webpack_require__(297);
+	var _GoogleMapLoader = __webpack_require__(304);
 
 	exports.GoogleMapLoader = _interopRequire(_GoogleMapLoader);
 
-	var _GoogleMap = __webpack_require__(307);
+	var _GoogleMap = __webpack_require__(314);
 
 	exports.GoogleMap = _interopRequire(_GoogleMap);
 
-	var _Circle = __webpack_require__(308);
+	var _Circle = __webpack_require__(315);
 
 	exports.Circle = _interopRequire(_Circle);
 
-	var _DirectionsRenderer = __webpack_require__(312);
+	var _DirectionsRenderer = __webpack_require__(319);
 
 	exports.DirectionsRenderer = _interopRequire(_DirectionsRenderer);
 
-	var _DrawingManager = __webpack_require__(315);
+	var _DrawingManager = __webpack_require__(322);
 
 	exports.DrawingManager = _interopRequire(_DrawingManager);
 
-	var _InfoWindow = __webpack_require__(318);
+	var _InfoWindow = __webpack_require__(325);
 
 	exports.InfoWindow = _interopRequire(_InfoWindow);
 
-	var _KmlLayer = __webpack_require__(322);
+	var _KmlLayer = __webpack_require__(329);
 
 	exports.KmlLayer = _interopRequire(_KmlLayer);
 
-	var _Marker = __webpack_require__(325);
+	var _Marker = __webpack_require__(332);
 
 	exports.Marker = _interopRequire(_Marker);
 
-	var _OverlayView = __webpack_require__(328);
+	var _OverlayView = __webpack_require__(335);
 
 	exports.OverlayView = _interopRequire(_OverlayView);
 
-	var _Polygon = __webpack_require__(330);
+	var _Polygon = __webpack_require__(337);
 
 	exports.Polygon = _interopRequire(_Polygon);
 
-	var _Polyline = __webpack_require__(333);
+	var _Polyline = __webpack_require__(340);
 
 	exports.Polyline = _interopRequire(_Polyline);
 
-	var _Rectangle = __webpack_require__(336);
+	var _Rectangle = __webpack_require__(343);
 
 	exports.Rectangle = _interopRequire(_Rectangle);
 
-	var _SearchBox = __webpack_require__(339);
+	var _SearchBox = __webpack_require__(346);
 
 	exports.SearchBox = _interopRequire(_SearchBox);
 
 /***/ },
-/* 297 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31370,7 +32377,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _creatorsGoogleMapHolder = __webpack_require__(298);
+	var _creatorsGoogleMapHolder = __webpack_require__(305);
 
 	var _creatorsGoogleMapHolder2 = _interopRequireDefault(_creatorsGoogleMapHolder);
 
@@ -31457,7 +32464,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 298 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31480,27 +32487,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _warning = __webpack_require__(299);
+	var _warning = __webpack_require__(306);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _eventListsGoogleMapEventList = __webpack_require__(300);
+	var _eventListsGoogleMapEventList = __webpack_require__(307);
 
 	var _eventListsGoogleMapEventList2 = _interopRequireDefault(_eventListsGoogleMapEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
@@ -31617,7 +32624,7 @@
 	exports["default"] = GoogleMapHolder;
 
 /***/ },
-/* 299 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31684,7 +32691,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 300 */
+/* 307 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Map
@@ -31698,7 +32705,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 301 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31750,7 +32757,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 302 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31762,7 +32769,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _addDefaultPrefix = __webpack_require__(303);
+	var _addDefaultPrefix = __webpack_require__(310);
 
 	var _addDefaultPrefix2 = _interopRequireDefault(_addDefaultPrefix);
 
@@ -31776,7 +32783,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 303 */
+/* 310 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31793,7 +32800,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 304 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31808,7 +32815,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _controlledOrDefault = __webpack_require__(305);
+	var _controlledOrDefault = __webpack_require__(312);
 
 	var _controlledOrDefault2 = _interopRequireDefault(_controlledOrDefault);
 
@@ -31832,7 +32839,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 305 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31844,7 +32851,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _addDefaultPrefix = __webpack_require__(303);
+	var _addDefaultPrefix = __webpack_require__(310);
 
 	var _addDefaultPrefix2 = _interopRequireDefault(_addDefaultPrefix);
 
@@ -31861,7 +32868,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 306 */
+/* 313 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31951,7 +32958,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 307 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31978,15 +32985,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _warning = __webpack_require__(299);
+	var _warning = __webpack_require__(306);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _creatorsGoogleMapHolder = __webpack_require__(298);
+	var _creatorsGoogleMapHolder = __webpack_require__(305);
 
 	var _creatorsGoogleMapHolder2 = _interopRequireDefault(_creatorsGoogleMapHolder);
 
-	var _GoogleMapLoader = __webpack_require__(297);
+	var _GoogleMapLoader = __webpack_require__(304);
 
 	var _GoogleMapLoader2 = _interopRequireDefault(_GoogleMapLoader);
 
@@ -32153,7 +33160,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 308 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32178,11 +33185,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsCircleCreator = __webpack_require__(310);
+	var _creatorsCircleCreator = __webpack_require__(317);
 
 	var _creatorsCircleCreator2 = _interopRequireDefault(_creatorsCircleCreator);
 
@@ -32285,7 +33292,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 309 */
+/* 316 */
 /***/ function(module, exports) {
 
 	var canUseDOM = !!(
@@ -32297,7 +33304,7 @@
 	module.exports = canUseDOM;
 
 /***/ },
-/* 310 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32320,27 +33327,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsCircleEventList = __webpack_require__(311);
+	var _eventListsCircleEventList = __webpack_require__(318);
 
 	var _eventListsCircleEventList2 = _interopRequireDefault(_eventListsCircleEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -32445,7 +33452,7 @@
 	exports["default"] = CircleCreator;
 
 /***/ },
-/* 311 */
+/* 318 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Circle
@@ -32459,7 +33466,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 312 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32484,11 +33491,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsDirectionsRendererCreator = __webpack_require__(313);
+	var _creatorsDirectionsRendererCreator = __webpack_require__(320);
 
 	var _creatorsDirectionsRendererCreator2 = _interopRequireDefault(_creatorsDirectionsRendererCreator);
 
@@ -32576,7 +33583,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 313 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32599,27 +33606,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsDirectionsRendererEventList = __webpack_require__(314);
+	var _eventListsDirectionsRendererEventList = __webpack_require__(321);
 
 	var _eventListsDirectionsRendererEventList2 = _interopRequireDefault(_eventListsDirectionsRendererEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -32727,7 +33734,7 @@
 	exports["default"] = DirectionsRendererCreator;
 
 /***/ },
-/* 314 */
+/* 321 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#DirectionsRenderer
@@ -32741,7 +33748,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 315 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32766,11 +33773,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsDrawingManagerCreator = __webpack_require__(316);
+	var _creatorsDrawingManagerCreator = __webpack_require__(323);
 
 	var _creatorsDrawingManagerCreator2 = _interopRequireDefault(_creatorsDrawingManagerCreator);
 
@@ -32848,7 +33855,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 316 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32871,27 +33878,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsDrawingManagerEventList = __webpack_require__(317);
+	var _eventListsDrawingManagerEventList = __webpack_require__(324);
 
 	var _eventListsDrawingManagerEventList2 = _interopRequireDefault(_eventListsDrawingManagerEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -32980,7 +33987,7 @@
 	exports["default"] = DrawingManagerCreator;
 
 /***/ },
-/* 317 */
+/* 324 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#DrawingManager
@@ -32994,7 +34001,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 318 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33019,11 +34026,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsInfoWindowCreator = __webpack_require__(319);
+	var _creatorsInfoWindowCreator = __webpack_require__(326);
 
 	var _creatorsInfoWindowCreator2 = _interopRequireDefault(_creatorsInfoWindowCreator);
 
@@ -33104,7 +34111,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 319 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33127,31 +34134,31 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsInfoWindowEventList = __webpack_require__(320);
+	var _eventListsInfoWindowEventList = __webpack_require__(327);
 
 	var _eventListsInfoWindowEventList2 = _interopRequireDefault(_eventListsInfoWindowEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsSetContentForOptionalReactElement = __webpack_require__(321);
+	var _utilsSetContentForOptionalReactElement = __webpack_require__(328);
 
 	var _utilsSetContentForOptionalReactElement2 = _interopRequireDefault(_utilsSetContentForOptionalReactElement);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -33261,7 +34268,7 @@
 	exports["default"] = InfoWindowCreator;
 
 /***/ },
-/* 320 */
+/* 327 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#InfoWindow
@@ -33275,7 +34282,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 321 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33318,7 +34325,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 322 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33343,11 +34350,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsKmlLayerCreator = __webpack_require__(323);
+	var _creatorsKmlLayerCreator = __webpack_require__(330);
 
 	var _creatorsKmlLayerCreator2 = _interopRequireDefault(_creatorsKmlLayerCreator);
 
@@ -33440,7 +34447,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 323 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33463,27 +34470,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsKmlLayerEventList = __webpack_require__(324);
+	var _eventListsKmlLayerEventList = __webpack_require__(331);
 
 	var _eventListsKmlLayerEventList2 = _interopRequireDefault(_eventListsKmlLayerEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -33600,7 +34607,7 @@
 	exports["default"] = KmlLayerCreator;
 
 /***/ },
-/* 324 */
+/* 331 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#KmlLayer
@@ -33614,7 +34621,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 325 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33639,11 +34646,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsMarkerCreator = __webpack_require__(326);
+	var _creatorsMarkerCreator = __webpack_require__(333);
 
 	var _creatorsMarkerCreator2 = _interopRequireDefault(_creatorsMarkerCreator);
 
@@ -33797,7 +34804,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 326 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33820,27 +34827,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsMarkerEventList = __webpack_require__(327);
+	var _eventListsMarkerEventList = __webpack_require__(334);
 
 	var _eventListsMarkerEventList2 = _interopRequireDefault(_eventListsMarkerEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -34015,7 +35022,7 @@
 	exports["default"] = MarkerCreator;
 
 /***/ },
-/* 327 */
+/* 334 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker
@@ -34029,7 +35036,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 328 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34054,11 +35061,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsOverlayViewCreator = __webpack_require__(329);
+	var _creatorsOverlayViewCreator = __webpack_require__(336);
 
 	var _creatorsOverlayViewCreator2 = _interopRequireDefault(_creatorsOverlayViewCreator);
 
@@ -34165,7 +35172,7 @@
 	// Controlled [props] - used in componentDidMount/componentDidUpdate
 
 /***/ },
-/* 329 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34194,15 +35201,15 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -34417,7 +35424,7 @@
 	exports["default"] = OverlayViewCreator;
 
 /***/ },
-/* 330 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34442,11 +35449,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsPolygonCreator = __webpack_require__(331);
+	var _creatorsPolygonCreator = __webpack_require__(338);
 
 	var _creatorsPolygonCreator2 = _interopRequireDefault(_creatorsPolygonCreator);
 
@@ -34539,7 +35546,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 331 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34562,27 +35569,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsPolygonEventList = __webpack_require__(332);
+	var _eventListsPolygonEventList = __webpack_require__(339);
 
 	var _eventListsPolygonEventList2 = _interopRequireDefault(_eventListsPolygonEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -34687,7 +35694,7 @@
 	exports["default"] = PolygonCreator;
 
 /***/ },
-/* 332 */
+/* 339 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Polygon
@@ -34701,7 +35708,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 333 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34726,11 +35733,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsPolylineCreator = __webpack_require__(334);
+	var _creatorsPolylineCreator = __webpack_require__(341);
 
 	var _creatorsPolylineCreator2 = _interopRequireDefault(_creatorsPolylineCreator);
 
@@ -34818,7 +35825,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 334 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34841,27 +35848,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsPolylineEventList = __webpack_require__(335);
+	var _eventListsPolylineEventList = __webpack_require__(342);
 
 	var _eventListsPolylineEventList2 = _interopRequireDefault(_eventListsPolylineEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -34962,7 +35969,7 @@
 	exports["default"] = PolylineCreator;
 
 /***/ },
-/* 335 */
+/* 342 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Polyline
@@ -34976,7 +35983,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 336 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35001,11 +36008,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsRectangleCreator = __webpack_require__(337);
+	var _creatorsRectangleCreator = __webpack_require__(344);
 
 	var _creatorsRectangleCreator2 = _interopRequireDefault(_creatorsRectangleCreator);
 
@@ -35098,7 +36105,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 337 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35121,27 +36128,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsRectangleEventList = __webpack_require__(338);
+	var _eventListsRectangleEventList = __webpack_require__(345);
 
 	var _eventListsRectangleEventList2 = _interopRequireDefault(_eventListsRectangleEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -35242,7 +36249,7 @@
 	exports["default"] = RectangleCreator;
 
 /***/ },
-/* 338 */
+/* 345 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#Rectangle
@@ -35256,7 +36263,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 339 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35283,11 +36290,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _canUseDom = __webpack_require__(309);
+	var _canUseDom = __webpack_require__(316);
 
 	var _canUseDom2 = _interopRequireDefault(_canUseDom);
 
-	var _creatorsSearchBoxCreator = __webpack_require__(340);
+	var _creatorsSearchBoxCreator = __webpack_require__(347);
 
 	var _creatorsSearchBoxCreator2 = _interopRequireDefault(_creatorsSearchBoxCreator);
 
@@ -35394,7 +36401,7 @@
 	// Event [onEventName]
 
 /***/ },
-/* 340 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35417,27 +36424,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _eventListsSearchBoxEventList = __webpack_require__(341);
+	var _eventListsSearchBoxEventList = __webpack_require__(348);
 
 	var _eventListsSearchBoxEventList2 = _interopRequireDefault(_eventListsSearchBoxEventList);
 
-	var _utilsEventHandlerCreator = __webpack_require__(301);
+	var _utilsEventHandlerCreator = __webpack_require__(308);
 
 	var _utilsEventHandlerCreator2 = _interopRequireDefault(_utilsEventHandlerCreator);
 
-	var _utilsDefaultPropsCreator = __webpack_require__(302);
+	var _utilsDefaultPropsCreator = __webpack_require__(309);
 
 	var _utilsDefaultPropsCreator2 = _interopRequireDefault(_utilsDefaultPropsCreator);
 
-	var _utilsComposeOptions = __webpack_require__(304);
+	var _utilsComposeOptions = __webpack_require__(311);
 
 	var _utilsComposeOptions2 = _interopRequireDefault(_utilsComposeOptions);
 
-	var _utilsComponentLifecycleDecorator = __webpack_require__(306);
+	var _utilsComponentLifecycleDecorator = __webpack_require__(313);
 
 	var _utilsComponentLifecycleDecorator2 = _interopRequireDefault(_utilsComponentLifecycleDecorator);
 
-	var _GoogleMapHolder = __webpack_require__(298);
+	var _GoogleMapHolder = __webpack_require__(305);
 
 	var _GoogleMapHolder2 = _interopRequireDefault(_GoogleMapHolder);
 
@@ -35551,7 +36558,7 @@
 	exports["default"] = SearchBoxCreator;
 
 /***/ },
-/* 341 */
+/* 348 */
 /***/ function(module, exports) {
 
 	// https://developers.google.com/maps/documentation/javascript/3.exp/reference#SearchBox
@@ -35565,7 +36572,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 342 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35632,7 +36639,7 @@
 	};
 
 /***/ },
-/* 343 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35647,11 +36654,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _google_map = __webpack_require__(295);
+	var _google_map = __webpack_require__(302);
 
 	var _google_map2 = _interopRequireDefault(_google_map);
 
-	var _navbar = __webpack_require__(342);
+	var _navbar = __webpack_require__(349);
 
 	var _navbar2 = _interopRequireDefault(_navbar);
 
