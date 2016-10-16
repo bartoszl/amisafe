@@ -25,4 +25,22 @@ Router.get('/points', function(req, res, next){
     });
 });
 
+Router.post('/address', function(req, res, next){
+  lookUpAddress = function(address){
+    return axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+      params: {
+        "address": address
+      }
+    });
+  };
+
+    var dataPromise = this.lookUpAddress(req.body.address);
+    dataPromise.then(function(result){
+       console.log(result.data.results[0].geometry.location);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  };
+})
+
 module.exports = Router;
